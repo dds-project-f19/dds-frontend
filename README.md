@@ -4,8 +4,13 @@ Frontend @ [F19] Distributed and Decentralized Systems
 
 ## Used source template info
 
-[react-redux-starter-kit](https://github.com/fullstack-development/react-redux-starter-kit)
+[fullstack-development/react-redux-starter-kit](https://github.com/fullstack-development/react-redux-starter-kit)
 
-_Licensed_: **MIT**
+Original template's license can be found [here](https://github.com/fullstack-development/react-redux-starter-kit/blob/master/LICENSE).
 
-_Copyright_: **(c) 2016 Fullstack Development**
+Changed content:
+
+* LICENSE   -> react-redux-starter-kit/docs/LICENSE
+* README.md -> react-redux-starter-kit/docs/README.md
+* docs/**   -> react-redux-starter-kit/docs/**
+* npm-shrinkwrap.json (updated dependencies)

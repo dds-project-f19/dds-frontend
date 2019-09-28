@@ -13,4 +13,8 @@ Changed content:
 * LICENSE   -> react-redux-starter-kit/docs/LICENSE
 * README.md -> react-redux-starter-kit/docs/README.md
 * docs/**   -> react-redux-starter-kit/docs/**
+* package.json        (replaced project info)
 * npm-shrinkwrap.json (updated dependencies)
+* src/features/** (replaced with own implementation)
+* src/modules/**  (replaced with own implementation)
+* src/shared/**   (replaced with own implementation)

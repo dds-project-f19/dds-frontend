@@ -1,4 +1,3 @@
-
 declare module 'react-jss/lib/injectSheet' {
   import React from 'react';
   import CSS from 'csstype';

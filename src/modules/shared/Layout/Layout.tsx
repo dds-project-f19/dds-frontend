@@ -68,14 +68,7 @@ class Layout extends React.Component<IProps> {
   @memoizeByProps((props: IProps) => [props.t])
   private getMenuItems(): IHeaderMenuItem[] {
     const { t } = this.props;
-    return [{
-      path: routes.search.users.getRoutePath(),
-      title: t(header.users),
-    },
-    {
-      path: routes.search.repositories.getRoutePath(),
-      title: t(header.repositories),
-    }];
+    return [];
   }
 
   @autobind

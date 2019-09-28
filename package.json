@@ -1,7 +1,7 @@
 {
-  "name": "react-redux-starter-kit",
-  "version": "1.0.0",
-  "description": "Starter kit from Fullstack-development company developers",
+  "name": "dds-frontend",
+  "version": "0.0.0",
+  "description": "Frontend for DDS project.",
   "main": "index.js",
   "scripts": {
     "check-types": "node_modules/.bin/tsc -p . --noEmit",

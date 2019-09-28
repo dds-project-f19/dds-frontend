@@ -2,14 +2,12 @@ import React from 'react';
 import { autobind } from 'core-decorators';
 import { Omit, SubSet } from '_helpers';
 
-import * as usersSearchFeature from 'features/usersSearch';
 import { injectable } from 'inversify';
 import { inject, TYPES } from './configureIoc';
 
 import { IFeatureEntry, IReduxEntry } from 'shared/types/app';
 
 interface IContainerTypes {
-  UserDetails: usersSearchFeature.Entry['containers']['UserDetails'];
 }
 
 type Container = keyof IContainerTypes;
@@ -30,7 +28,6 @@ type GenericLoadersMap = {
 };
 
 const containerLoadersDictionary: LoadersMap = {
-  UserDetails: usersSearchFeature.loadEntry,
 };
 
 interface IState {
@@ -76,7 +73,7 @@ function containersProvider<L extends Container>(containers: L[], preloader?: Re
       }
 
       @autobind
-      private async loadFeatureContainer(containerKey: Container): Promise<void> {
+      private async loadFeatureContainer(containerKey: Container): Promise<void> {/*
         const bundle = await (containerLoadersDictionary as GenericLoadersMap)[containerKey]();
         const container = bundle.containers[containerKey];
 
@@ -85,7 +82,7 @@ function containersProvider<L extends Container>(containers: L[], preloader?: Re
           throw new Error(`ContainersProvider did not find the container "${containerKey}"`);
         }
 
-        this.saveContainerToState && this.saveContainerToState(container, containerKey);
+        this.saveContainerToState && this.saveContainerToState(container, containerKey);*/
       }
 
       private saveContainerToState: null | ((container: React.ComponentType<any>, key: string) => void) =

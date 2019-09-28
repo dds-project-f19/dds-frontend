@@ -5,12 +5,16 @@
   ],
   "linterOptions": {
     "exclude": [
-        "*.json"
+      "*.json"
     ]
   },
   "rulesDirectory": "./node_modules/tslint-eslint-rules/dist/rules",
   "jsRules": {
-    "indent": [true, "spaces", 2],
+    "indent": [
+      true,
+      "spaces",
+      2
+    ],
     "class-name": true,
     "comment-format": [
       true,
@@ -52,9 +56,19 @@
     ]
   },
   "rules": {
-    "import-blacklist": [true, "react-jss", "@material-ui/core", "@material-ui/icons", "i18next", "react-i18next"],
+    "import-blacklist": [
+      true,
+      "react-jss",
+      "@material-ui/core",
+      "@material-ui/icons",
+      "i18next",
+      "react-i18next"
+    ],
     "object-literal-key-quotes": false,
-    "no-unused-expression": [true, "allow-fast-null-checks"],
+    "no-unused-expression": [
+      true,
+      "allow-fast-null-checks"
+    ],
     "no-implicit-dependencies": false,
     "no-object-literal-type-assertion": false,
     "ordered-imports": false,

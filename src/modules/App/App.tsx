@@ -1,8 +1,17 @@
 import React from 'react';
+import { makeStyles } from "@material-ui/core/styles";
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { LoginPage } from '../LoginPage';
-
+import { LoginPage } from 'modules/LoginPage';
 import { Api } from 'services/api';
+
+makeStyles(theme => ({
+  "@global": {
+    body: {
+      backgroundColor: theme.palette.common.white,
+    },
+  },
+}));
 
 interface IProps { }
 
@@ -15,7 +24,7 @@ export default class App extends React.PureComponent<IProps, IState> {
   public state: IState = {
     api: new Api(),
     pingContent: '',
-  }
+  };
 
   private pingServer: () => Promise<void> = async () => {
     const { api } = this.state;
@@ -31,14 +40,14 @@ export default class App extends React.PureComponent<IProps, IState> {
     }
   }
 
-  public render() {
-    const { pingContent } = this.state;
-
+  public render(): JSX.Element {
     return (
-      <LoginPage
-        pingContent={pingContent}
-        pingServer={this.pingServer}
-      />
+      <React.Fragment>
+        <CssBaseline />
+        <LoginPage
+          onLoginAttempt={async () => { }}
+        />
+      </React.Fragment>
     );
   }
 }

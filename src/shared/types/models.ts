@@ -25,7 +25,7 @@ export interface IBasicResponse {
 }
 
 export interface ILoginResponse {
-  key: string;
+  token: string;
 }
 
 export interface IUserInfo { // TODO: Change name
@@ -42,7 +42,7 @@ export interface IItemInfo {
   slot: string;
 }
 
-export interface IAvailableItems{
+export interface IAvailableItems {
   items: IItemInfo[];
 }
 

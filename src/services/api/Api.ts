@@ -25,8 +25,8 @@ export default class Api {
       = async (data: IRegisterFields) => await this.actions.post('/worker/register', data);
 
   public loginWorker: (data: ICredentials) => Promise<void> = async (data: ICredentials) => {
-    const { key } = await this.actions.post('/worker/login', data) as ILoginResponse;
-    this.actions.addHeader('Authorization', key);
+    const { token } = await this.actions.post('/worker/login', data) as ILoginResponse;
+    this.actions.addHeader('Authorization', token);
   }
 
   public getWorkerInfo: () => Promise<IWorkerInfo>
@@ -63,10 +63,10 @@ export default class Api {
 
   public removeItem: (item: IItemInfo) => Promise<void>
       = async (item: IItemInfo) => await this.actions.patch('/manager/remove_available_items', item)
-  
+
   public getAvailableItemsForManager: () => Promise<IAvailableItems>
       = async () => await this.actions.get('/manager/list_available_items');
-  
+
   public getTakenItemsForManager: () => Promise<IUsedItems>
       = async () => await this.actions.get('/manager/list_taken_items');
 

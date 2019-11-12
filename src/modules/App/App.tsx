@@ -4,8 +4,9 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { LoginPage } from 'modules/LoginPage';
 import { Api } from 'services/api';
+import { ICredentials } from 'shared/types/models';
 
-makeStyles(theme => ({
+makeStyles((theme) => ({
   "@global": {
     body: {
       backgroundColor: theme.palette.common.white,
@@ -40,12 +41,23 @@ export default class App extends React.PureComponent<IProps, IState> {
     }
   }
 
+  private login: (credentials: ICredentials) => Promise<void> = async (credentials: ICredentials) => {
+    const { api } = this.state;
+
+    try {
+      // TODO: check if this a manager or a worker
+      api.loginWorker(credentials)
+    } catch (e) {
+      // TODO: Handle errors
+    }
+  }
+
   public render(): JSX.Element {
     return (
       <React.Fragment>
         <CssBaseline />
         <LoginPage
-          onLoginAttempt={async () => { }}
+          authorizationApi={this.login}
         />
       </React.Fragment>
     );

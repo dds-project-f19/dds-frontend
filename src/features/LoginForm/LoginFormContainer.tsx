@@ -1,9 +1,10 @@
 import React from 'react';
 
 import LoginForm from './LoginForm';
+import { ICredentials } from 'shared/types/models';
 
 interface IProps {
-  onLoginAttempt: (login: string, password: string) => Promise<void>;
+  onLoginAttempt: (credentials: ICredentials) => Promise<void>;
 }
 
 interface IState {
@@ -12,7 +13,7 @@ interface IState {
 }
 
 export interface IFormFields {
-  login: string;
+  username: string;
   password: string;
 }
 
@@ -23,7 +24,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
 
   public state: IState = {
     formFields: {
-      login: '',
+      username: '',
       password: '',
     },
     isWaiting: false,
@@ -50,7 +51,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
     const {
       state: {
         formFields: {
-          login,
+          username,
           password,
         },
       },
@@ -61,7 +62,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
 
     this.setState({ isWaiting: true });
 
-    await onLoginAttempt(login, password);
+    await onLoginAttempt({ username, password });
 
     this.setState({ isWaiting: false });
   }

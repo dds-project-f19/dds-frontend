@@ -15,7 +15,7 @@ interface IProps {
   handleFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
 
 const LoginForm: React.FC<IProps> = ({
   formFields: {
-    login: loginValue,
+    username: usernameValue,
     password: passwordValue,
   },
   isWaiting,
@@ -64,13 +64,13 @@ const LoginForm: React.FC<IProps> = ({
         onSubmit={handleFormSubmit}
       >
         <LoginFormInput
-          name="login"
-          label="Login"
+          name="username"
+          label="Username"
           required
           autoComplete="username"
           autoFocus
           disabled={isWaiting}
-          value={loginValue}
+          value={usernameValue}
           onChange={handleFieldChange}
         />
         <LoginFormInput

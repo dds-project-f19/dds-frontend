@@ -1,27 +1,22 @@
 import React from 'react';
-import logo from './pic/logo.svg';
-import './LoginPage.css';
+import Container from '@material-ui/core/Container';
+
+import { LoginForm } from 'features/LoginForm';
+import { ICredentials } from 'shared/types/models';
 
 interface IProps {
-  pingContent: string;
-  pingServer: () => void;
+  authorizationApi: (credendtials: ICredentials) => Promise<void>;
 }
 
-const LoginPage: React.FC<IProps> = ({ pingContent, pingServer }: IProps) => (
-  <div className="App">
-    <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-        Edit <code>src/LoginPage.tsx</code> and save to reload.
-      </p>
-      <div>
-        {pingContent}
-      </div>
-      <button onClick={pingServer}>
-        {'PING'}
-      </button>
-    </header>
-  </div>
+const LoginPage: React.FC<IProps> = ({ authorizationApi }: IProps) => (
+  <Container
+    component='main'
+    maxWidth='sm'
+  >
+    <LoginForm
+      onLoginAttempt={authorizationApi}
+    />
+  </Container>
 );
 
 export default LoginPage;

@@ -13,10 +13,10 @@ const LoginFormInput: React.FC<IProps> = ({
     <TextField
       id={name}
       name={name}
-      type="input"
+      type='input'
       fullWidth
-      margin="normal"
-      variant="outlined"
+      margin='normal'
+      variant='outlined'
       {...otherProps}
     />
   );

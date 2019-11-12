@@ -10,8 +10,8 @@ interface IProps {
 
 const LoginPage: React.FC<IProps> = ({ authorizationApi }: IProps) => (
   <Container
-    component="main"
-    maxWidth="sm"
+    component='main'
+    maxWidth='sm'
   >
     <LoginForm
       onLoginAttempt={authorizationApi}

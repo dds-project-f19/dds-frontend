@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 import { IFormFields } from './LoginFormContainer';
 import { LoginFormInput } from './_Input';
@@ -54,8 +54,8 @@ const LoginForm: React.FC<IProps> = ({
         <LockOutlinedIcon />
       </Avatar>
       <Typography
-        component="h1"
-        variant="h5"
+        component='h1'
+        variant='h5'
       >
         {'Sign in'}
       </Typography>
@@ -64,30 +64,30 @@ const LoginForm: React.FC<IProps> = ({
         onSubmit={handleFormSubmit}
       >
         <LoginFormInput
-          name="username"
-          label="Username"
+          name='username'
+          label='Username'
           required
-          autoComplete="username"
+          autoComplete='username'
           autoFocus
           disabled={isWaiting}
           value={usernameValue}
           onChange={handleFieldChange}
         />
         <LoginFormInput
-          name="password"
-          label="Password"
+          name='password'
+          label='Password'
           required
-          autoComplete="current-password"
-          type="password"
+          autoComplete='current-password'
+          type='password'
           disabled={isWaiting}
           value={passwordValue}
           onChange={handleFieldChange}
         />
         <Button
-          type="submit"
+          type='submit'
           fullWidth
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           className={classes.submit}
         >
           {'Sign In'}

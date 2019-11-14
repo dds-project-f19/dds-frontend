@@ -13,6 +13,7 @@ import HttpActions from './HttpActions';
 
 export default class Api {
   private actions: HttpActions;
+  public isAuthenticated: boolean = false;
 
   constructor() {
     this.actions = new HttpActions('/api');
@@ -26,6 +27,7 @@ export default class Api {
 
   public loginWorker: (data: ICredentials) => Promise<void> = async (data: ICredentials) => {
     const { token } = await this.actions.post('/worker/login', data) as ILoginResponse;
+    this.isAuthenticated = true;
     this.actions.addHeader('Authorization', token);
   }
 

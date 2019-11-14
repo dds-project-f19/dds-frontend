@@ -6,7 +6,7 @@ interface IProps {
   [key: string]: any;
 }
 
-const LoginFormInput: React.FC<IProps> = ({
+const InputField: React.FC<IProps> = ({
   name,
   ...otherProps
 }: IProps) => (
@@ -21,4 +21,4 @@ const LoginFormInput: React.FC<IProps> = ({
     />
   );
 
-export default LoginFormInput;
+export default InputField;

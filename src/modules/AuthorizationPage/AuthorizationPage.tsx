@@ -7,15 +7,17 @@ import { RegistrationForm } from 'features/RegistrationForm';
 import { ICredentials, IRegisterFields } from 'shared/types/models';
 
 interface IProps {
+  onSuccessRedirectPath: string;
   authorizationApi: (credendtials: ICredentials) => Promise<void>;
   registrationApi: (regFields: IRegisterFields) => Promise<void>;
 }
 
 const AuthorizationPage: React.FC<IProps> = ({
+  onSuccessRedirectPath,
   authorizationApi,
   registrationApi,
 }: IProps) => {
-  let { path: matchPath } = useRouteMatch() || {};
+  const { path: matchPath } = useRouteMatch() || {};
 
   const loginFormPath = `${matchPath}/in`;
   const regFormPath = `${matchPath}/up`;
@@ -30,15 +32,17 @@ const AuthorizationPage: React.FC<IProps> = ({
           <LoginForm
             onLoginAttempt={authorizationApi}
             regFormPath={regFormPath}
+            onSuccessRedirectPath={onSuccessRedirectPath}
           />
         </Route>
         <Route path={regFormPath}>
           <RegistrationForm
             onRegisterAttempt={registrationApi}
             loginFormPath={loginFormPath}
+            onSuccessRedirectPath={onSuccessRedirectPath}
           />
         </Route>
-        <Route path={matchPath}>
+        <Route exact path={matchPath}>
           <Redirect to={loginFormPath} />
         </Route>
       </Switch>

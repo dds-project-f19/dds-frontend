@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { AuthorizationPage } from 'modules/AuthorizationPage';
+import { WorkspacePage } from 'modules/WorkspacePage';
 import { Api } from 'services/api';
-import { ICredentials, IRegisterFields } from 'shared/types/models';
 
 makeStyles((theme) => ({
   '@global': {
@@ -26,40 +26,15 @@ export default class App extends React.PureComponent<IProps, IState> {
     api: new Api(),
   };
 
-  private login: (credentials: ICredentials) => Promise<void> = async (credentials: ICredentials) => {
-    const { api } = this.state;
-
-    try {
-      // TODO: check if this a manager or a worker
-      api.loginWorker(credentials)
-    } catch (e) {
-      // TODO: Handle errors
-    }
-  }
-
-  private register: (regFields: IRegisterFields) => Promise<void> = async (regFields: IRegisterFields) => {
-    const { api } = this.state;
-
-    try {
-      // TODO: check if this a manager or a worker
-      api.registerWorker(regFields)
-    } catch (e) {
-      // TODO: Handle errors
-    }
-  }
-
   public render(): JSX.Element {
     const {
-      login,
-      register,
-      state: {
-        api: {
-          isAuthenticated,
-        },
-      },
-    } = this;
+      isAuthenticated,
+      loginWorker,
+      registerWorker,
+    } = this.state.api;
 
     const authPath = '/auth';
+    const workspacePath = '/workspace';
 
     return (
       <BrowserRouter>
@@ -72,13 +47,16 @@ export default class App extends React.PureComponent<IProps, IState> {
           <Switch>
             <Route path={authPath}>
               <AuthorizationPage
-                authorizationApi={login}
-                registrationApi={register}
+                onSuccessRedirectPath={workspacePath}
+                authorizationApi={loginWorker}
+                registrationApi={registerWorker}
               />
             </Route>
+            <Route path={workspacePath}>
+              <WorkspacePage />
+            </Route>
             <Route path='/'>
-              {/* TODO: '/game' */}
-              <Redirect to={authPath} />
+              <Redirect to={workspacePath} />
             </Route>
           </Switch>
         </React.Fragment>

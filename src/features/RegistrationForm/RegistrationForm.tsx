@@ -6,15 +6,15 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import MaterialLink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import ListAltOutlined from '@material-ui/icons/ListAltOutlined';
 
-import { ICredentials } from 'shared/types/models';
+import { IRegisterFields } from 'shared/types/models';
 import { InputField } from 'features/InputField';
 
 interface IProps {
-  formFields: Required<ICredentials>;
+  formFields: Required<IRegisterFields>;
   isWaiting: boolean;
-  regFormPath: string;
+  loginFormPath: string;
   handleFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
@@ -39,13 +39,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const LoginForm: React.FC<IProps> = ({
+const RegistrationForm: React.FC<IProps> = ({
   formFields: {
     username: usernameValue,
     password: passwordValue,
+    name: nameValue,
+    surname: surnameValue,
+    phone: phoneValue,
+    address: addressValue,
   },
   isWaiting,
-  regFormPath,
+  loginFormPath,
   handleFieldChange,
   handleFormSubmit,
 }: IProps) => {
@@ -56,13 +60,13 @@ const LoginForm: React.FC<IProps> = ({
       className={classes.paper}
     >
       <Avatar className={classes.pictogram}>
-        <LockOutlinedIcon />
+        <ListAltOutlined />
       </Avatar>
       <Typography
         component='h1'
         variant='h5'
       >
-        {'Sign in'}
+        {'Sign up'}
       </Typography>
       <form
         className={classes.form}
@@ -88,6 +92,39 @@ const LoginForm: React.FC<IProps> = ({
           value={passwordValue}
           onChange={handleFieldChange}
         />
+        <InputField
+          name='name'
+          label='Name'
+          autoComplete='given-name'
+          disabled={isWaiting}
+          value={nameValue}
+          onChange={handleFieldChange}
+        />
+        <InputField
+          name='surname'
+          label='Surname'
+          autoComplete='family-name'
+          disabled={isWaiting}
+          value={surnameValue}
+          onChange={handleFieldChange}
+        />
+        <InputField
+          name='phone'
+          label='Phone number'
+          autoComplete='tel'
+          type='tel'
+          disabled={isWaiting}
+          value={phoneValue}
+          onChange={handleFieldChange}
+        />
+        <InputField
+          name='address'
+          label='Address'
+          autoComplete='street-address'
+          disabled={isWaiting}
+          value={addressValue}
+          onChange={handleFieldChange}
+        />
         <Button
           type='submit'
           fullWidth
@@ -95,17 +132,17 @@ const LoginForm: React.FC<IProps> = ({
           color='primary'
           className={classes.submit}
         >
-          {'Sign In'}
+          {'Sign Up'}
         </Button>
       </form>
       <Grid container>
         <Grid item xs>
-          <RouterLink to={regFormPath}>
+          <RouterLink to={loginFormPath}>
             <MaterialLink
               component='div'
               variant='body2'
             >
-              {'Sign up'}
+              {'Sign in'}
             </MaterialLink>
           </RouterLink>
         </Grid>
@@ -114,4 +151,4 @@ const LoginForm: React.FC<IProps> = ({
   );
 };
 
-export default LoginForm;
+export default RegistrationForm;

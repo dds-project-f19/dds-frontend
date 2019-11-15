@@ -1,27 +1,31 @@
 import React from 'react';
 
-import LoginForm from './LoginForm';
-import { ICredentials } from 'shared/types/models';
+import RegistrationForm from './RegistrationForm';
+import { IRegisterFields } from 'shared/types/models';
 
 interface IProps {
-  onLoginAttempt: (credentials: ICredentials) => Promise<void>;
-  regFormPath: string;
+  onRegisterAttempt: (regFields: IRegisterFields) => Promise<void>;
+  loginFormPath: string;
 }
 
 interface IState {
-  formFields: Required<ICredentials>;
+  formFields: Required<IRegisterFields>;
   isWaiting: boolean;
 }
 
-export default class LoginFormContainer extends React.PureComponent<IProps, IState> {
+export default class RegistrationFormContainer extends React.PureComponent<IProps, IState> {
   public static defaultProps = {
-    onLoginAttempt: async () => { },
+    onRegisterAttempt: async () => { },
   };
 
   public state: IState = {
     formFields: {
       username: '',
       password: '',
+      name: '',
+      surname: '',
+      phone: '',
+      address: '',
     },
     isWaiting: false,
   };
@@ -46,7 +50,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
 
     const {
       props: {
-        onLoginAttempt,
+        onRegisterAttempt,
       },
       state: {
         formFields,
@@ -55,7 +59,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
 
     this.setState({ isWaiting: true });
 
-    await onLoginAttempt(formFields);
+    await onRegisterAttempt(formFields);
 
     this.setState({ isWaiting: false });
   }
@@ -63,7 +67,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
   render(): JSX.Element {
     const {
       props: {
-        regFormPath,
+        loginFormPath,
       },
       state: {
         formFields,
@@ -74,10 +78,10 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
     } = this;
 
     return (
-      <LoginForm
+      <RegistrationForm
         formFields={formFields}
         isWaiting={isWaiting}
-        regFormPath={regFormPath}
+        loginFormPath={loginFormPath}
         handleFieldChange={handleFieldChange}
         handleFormSubmit={handleFormSubmit}
       />

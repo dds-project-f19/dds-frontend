@@ -1,8 +1,9 @@
 import React from 'react';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import { LoginPage } from 'modules/LoginPage';
+import { AuthorizationPage } from 'modules/AuthorizationPage';
 import { Api } from 'services/api';
 import { ICredentials } from 'shared/types/models';
 
@@ -37,13 +38,39 @@ export default class App extends React.PureComponent<IProps, IState> {
   }
 
   public render(): JSX.Element {
+    const {
+      login,
+      state: {
+        api: {
+          isAuthenticated,
+        },
+      },
+    } = this;
+
+    const authPath = '/auth';
+
     return (
-      <React.Fragment>
-        <CssBaseline />
-        <LoginPage
-          authorizationApi={this.login}
-        />
-      </React.Fragment>
+      <BrowserRouter>
+        <React.Fragment>
+          <CssBaseline />
+          {
+            !isAuthenticated &&
+            <Redirect to={authPath} />
+          }
+          <Switch>
+            <Route path={authPath}>
+              <AuthorizationPage
+                authorizationApi={login}
+                registrationApi={async (o) => { console.log(o); }}
+              />
+            </Route>
+            <Route path='/'>
+              {/* TODO: '/game' */}
+              <Redirect to={authPath} />
+            </Route>
+          </Switch>
+        </React.Fragment>
+      </BrowserRouter>
     );
   }
 }

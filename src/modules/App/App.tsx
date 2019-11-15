@@ -41,7 +41,7 @@ export default class App extends React.PureComponent<IProps, IState> {
         <React.Fragment>
           <CssBaseline />
           {
-            !isAuthenticated &&
+            !isAuthenticated && 
             <Redirect to={authPath} />
           }
           <Switch>
@@ -55,9 +55,12 @@ export default class App extends React.PureComponent<IProps, IState> {
             <Route path={workspacePath}>
               <WorkspacePage />
             </Route>
-            <Route path='/'>
-              <Redirect to={workspacePath} />
-            </Route>
+            {
+              isAuthenticated &&
+              <Route path='/'>
+                <Redirect to={workspacePath} />
+              </Route>
+            }
           </Switch>
         </React.Fragment>
       </BrowserRouter>

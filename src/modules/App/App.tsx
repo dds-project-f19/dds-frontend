@@ -5,7 +5,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { AuthorizationPage } from 'modules/AuthorizationPage';
 import { Api } from 'services/api';
-import { ICredentials } from 'shared/types/models';
+import { ICredentials, IRegisterFields } from 'shared/types/models';
 
 makeStyles((theme) => ({
   '@global': {
@@ -37,9 +37,21 @@ export default class App extends React.PureComponent<IProps, IState> {
     }
   }
 
+  private register: (regFields: IRegisterFields) => Promise<void> = async (regFields: IRegisterFields) => {
+    const { api } = this.state;
+
+    try {
+      // TODO: check if this a manager or a worker
+      api.registerWorker(regFields)
+    } catch (e) {
+      // TODO: Handle errors
+    }
+  }
+
   public render(): JSX.Element {
     const {
       login,
+      register,
       state: {
         api: {
           isAuthenticated,
@@ -61,7 +73,7 @@ export default class App extends React.PureComponent<IProps, IState> {
             <Route path={authPath}>
               <AuthorizationPage
                 authorizationApi={login}
-                registrationApi={async (o) => { console.log(o); }}
+                registrationApi={register}
               />
             </Route>
             <Route path='/'>

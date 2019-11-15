@@ -22,8 +22,11 @@ export default class Api {
   public ping: () => Promise<string>
       = async () => await this.actions.get('/ping');
 
-  public registerWorker: (data: IRegisterFields) => Promise<ILoginResponse>
-      = async (data: IRegisterFields) => await this.actions.post('/worker/register', data);
+  public registerWorker: (data: IRegisterFields) => Promise<void> = async (data: IRegisterFields) => {
+    const { token } = await this.actions.post('/worker/register', data);
+    this.isAuthenticated = true;
+    this.actions.addHeader('Authorization', token);
+  }
 
   public loginWorker: (data: ICredentials) => Promise<void> = async (data: ICredentials) => {
     const { token } = await this.actions.post('/worker/login', data) as ILoginResponse;

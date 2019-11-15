@@ -86,7 +86,7 @@ const RegistrationForm: React.FC<IProps> = ({
           name='password'
           label='Password'
           required
-          autoComplete='current-password'
+          autoComplete='new-password'
           type='password'
           disabled={isWaiting}
           value={passwordValue}

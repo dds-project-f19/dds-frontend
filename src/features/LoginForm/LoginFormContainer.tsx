@@ -20,6 +20,15 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
   public static defaultProps = {
     onLoginAttempt: async () => { },
   };
+  private _isMounted: boolean = false;
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   public state: IState = {
     formFields: {
@@ -59,13 +68,16 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
 
     this.setState({ isWaiting: true });
 
+    let succeed: boolean = false;
     try {
       await onLoginAttempt(formFields);
-      this.setState({ toRedirect: true });
-    } catch (e) {
+      succeed = true;
+    } catch (e) { }
+
+    if (this._isMounted) {
       this.setState({
+        toRedirect: succeed,
         isWaiting: false,
-        /* TODO: error message */
       });
     }
   }

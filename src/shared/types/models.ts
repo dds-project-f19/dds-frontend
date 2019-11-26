@@ -39,7 +39,7 @@ export interface IUserList {
 
 export interface IItemInfo {
   itemtype: string;
-  slot: string;
+  count: number;
 }
 
 export interface IAvailableItems {

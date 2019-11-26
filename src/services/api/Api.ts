@@ -50,7 +50,7 @@ export default class Api {
       = async () => await this.actions.get('/worker/list_available_items');
 
   public getUsedItemsForWorker: () => Promise<IUsedItems>
-      = async () => await this.actions.get('/worker/taken_items');
+      = async () => await this.actions.get('/worker/list_taken_items');
 
 // ----------- Manager -----------
 

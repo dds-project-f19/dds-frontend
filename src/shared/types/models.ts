@@ -9,6 +9,7 @@ export interface ICredentials {
 
 export interface ILoginResponse {
   token: string;
+  claim: 'worker'|'manager'|'admin'|'unknown';
 }
 
 export interface IWorkerInfo {

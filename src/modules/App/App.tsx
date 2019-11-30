@@ -26,11 +26,13 @@ export default class App extends React.PureComponent<IProps, IState> {
     api: new Api(),
   };
 
+  private isAuthenticated(): boolean {
+    return this.state.api.role !== 'unknown';
+  }
+
   public render(): JSX.Element {
     const {
-      isAuthenticated,
       loginWorker,
-      registerWorker,
     } = this.state.api;
 
     const authPath = '/auth';
@@ -41,7 +43,7 @@ export default class App extends React.PureComponent<IProps, IState> {
         <React.Fragment>
           <CssBaseline />
           {
-            !isAuthenticated && 
+            !this.isAuthenticated() &&
             <Redirect to={authPath} />
           }
           <Switch>
@@ -49,14 +51,14 @@ export default class App extends React.PureComponent<IProps, IState> {
               <AuthorizationPage
                 onSuccessRedirectPath={workspacePath}
                 authorizationApi={loginWorker}
-                registrationApi={registerWorker}
+                registrationApi={async () => {}} // FIXME: remove sign up
               />
             </Route>
             <Route path={workspacePath}>
               <WorkspacePage />
             </Route>
             {
-              isAuthenticated &&
+              this.isAuthenticated() &&
               <Route path='/'>
                 <Redirect to={workspacePath} />
               </Route>

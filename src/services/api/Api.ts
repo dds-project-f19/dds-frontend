@@ -15,7 +15,7 @@ import HttpActions from './HttpActions';
 
 export default class Api {
   private actions: HttpActions;
-  public isAuthenticated: boolean = false;
+  public role: ILoginResponse['claim'] = 'unknown';
 
   constructor() {
     this.actions = new HttpActions('/api');
@@ -25,8 +25,8 @@ export default class Api {
     = async () => await this.actions.get('/ping');
 
   public loginWorker: (data: ICredentials) => Promise<void> = async (data) => {
-    const { token } = await this.actions.post('/common/login', data) as ILoginResponse;
-    this.isAuthenticated = true;
+    const { token, claim } = await this.actions.post('/common/login', data) as ILoginResponse;
+    this.role = claim;
     this.actions.addHeader('Authorization', token);
   };
 

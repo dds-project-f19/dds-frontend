@@ -1,10 +1,14 @@
-export interface IRegisterFields {
+export interface IBasicResponse {
+  message: string;
+}
+
+export interface ICredentials {
   username: string;
   password: string;
-  name?: string;
-  surname?: string;
-  phone?: string;
-  address?: string;
+}
+
+export interface ILoginResponse {
+  token: string;
 }
 
 export interface IWorkerInfo {
@@ -15,26 +19,13 @@ export interface IWorkerInfo {
   address?: string;
 }
 
-export interface ICredentials {
-  username: string;
-  password: string;
+export interface ITakeItemInfo {
+  itemtype: string;
+  slot: string;
 }
 
-export interface IBasicResponse {
-  message: string;
-}
-
-export interface ILoginResponse {
-  token: string;
-}
-
-export interface IUserInfo { // TODO: Change name
-  username: string;
-  name: string;
-}
-
-export interface IUserList {
-  data: IUserInfo[];
+export interface IReturnItemInfo {
+  slot: string;
 }
 
 export interface IItemInfo {
@@ -53,5 +44,18 @@ export interface IUsedItem {
 }
 
 export interface IUsedItems {
-  items: IUsedItems[];
+  items: IUsedItem[];
+}
+
+export interface IRegisterFields {
+  username: string;
+  password: string;
+  name?: string;
+  surname?: string;
+  phone?: string;
+  address?: string;
+}
+
+export interface IWorkerList {
+  users: IWorkerInfo[];
 }

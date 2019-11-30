@@ -5,6 +5,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import ManagerForm from './ManagerForm';
+import { string } from 'prop-types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,9 +18,11 @@ const useStyles = makeStyles((theme: Theme) =>
 interface IProps { }
 
 interface IState {
+  curUser: string;
   startDate: Date;
   endDate: Date;
-  isWaiting: boolean;
+  isUserWaiting: boolean;
+  isTimeWaiting: boolean;
   resText: string;
 }
 
@@ -30,8 +33,10 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
   public occupiedText = () => "This time slot is already occupied!";
 
   public state: IState = {
+    curUser: "",
     startDate: new Date(),
-    isWaiting: false,
+    isUserWaiting: false,
+    isTimeWaiting: false,
     endDate: new Date(),
     resText: "",
   };
@@ -47,6 +52,26 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     tempDate.setSeconds(time.getSeconds());
     tempDate.setMilliseconds(time.getMilliseconds());
     return tempDate;
+  };
+
+  private handleUserChange = (event: React.ChangeEvent<{ value: string }>) => {
+    this.setState({
+      curUser: event.target.value,
+      isUserWaiting: true,
+      resText: "",
+    })
+
+    // TODO: Add actual API call
+
+    this.setState({
+      isUserWaiting: false,
+    })
+  };
+
+  private handleFieldChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    console.log(event)
+    console.log(event.target)
+    // TODO
   };
 
   private handleDateChange = async (date: Date) => {
@@ -91,13 +116,14 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     const { startDate, endDate } = this.state;
 
     this.setState({
-      isWaiting: true,
+      isTimeWaiting: true,
       resText: "",
     })
-    // TODO: Change with actual API call
+
+    // TODO: Add actual API call
 
     this.setState({
-      isWaiting: false,
+      isTimeWaiting: false,
     })
     if (startDate.getHours() > 8 && endDate.getHours() > 8) {
       this.setState({
@@ -113,11 +139,15 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
   render(): JSX.Element {
     const {
       state: {
+        curUser,
         startDate,
         endDate,
-        isWaiting,
+        isTimeWaiting,
+        isUserWaiting,
         resText,
       },
+      handleUserChange,
+      handleFieldChange,
       handleDateChange,
       handleStartTimeChange,
       handleEndTimeChange,
@@ -125,12 +155,17 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
     return (
       <ManagerForm
-        userslist={generateUsersList()}
-        itemslist={generateItemsList()}
+        userslist={["User0", "User1"]}
+        itemslist={}
         resText={resText}
-        isWaiting={isWaiting}
+        isUserWaiting={isUserWaiting}
+        isTimeWaiting={isTimeWaiting}
+        curUser={curUser}
         startDate={startDate}
         endDate={endDate}
+
+        handleUserChange={handleUserChange}
+        handleFieldChange={handleFieldChange}
         handleDateChange={handleDateChange}
         handleStartTimeChange={handleStartTimeChange}
         handleEndTimeChange={handleEndTimeChange}
@@ -138,32 +173,4 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     );
   }
 
-}
-
-function generateUsersList() {
-  return [0, 1, 2, 3, 4, 5].map(id => <option value={id}>User{id}</option>);
-}
-
-function generateRoomList() {
-  return [0, 1, 2, 3, 4, 5].map(id => <option value={id}>Room{id}</option>);
-}
-
-function generateItemsList() {
-  const classes = useStyles();
-
-  return [0, 1, 2, 3, 4, 5].map(value =>
-    React.cloneElement(
-      (
-        <ListItem className={classes.listitem}>
-          <ListItemText primary={`Item${value}`} />
-          <ListItemSecondaryAction>
-            <TextField id="outlined-basic" label="Amount" variant="outlined" />
-          </ListItemSecondaryAction>
-        </ListItem>
-      ) as React.ReactElement,
-      {
-        key: value
-      }
-    )
-  );
 }

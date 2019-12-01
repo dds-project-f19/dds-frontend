@@ -38,6 +38,11 @@ export default class App extends React.PureComponent<IProps, IState> {
       returnItem,
       getAvailableItemsForWorker,
       getUsedItemsForWorker,
+      listWorkers,
+      getAvailableItemsForManager,
+      setItem,
+      setWorkerSchedule,
+      checkTimeOverlap,
     } = this.state.api;
 
     const authPath = '/auth';
@@ -46,11 +51,10 @@ export default class App extends React.PureComponent<IProps, IState> {
 
     const redirectTo = () => {
       const { role } = this.state.api;
-      console.log('HEY!')
-      console.log(role)
-      switch(role) {
+      switch (role) {
         case 'manager': {
-          return managerPagePath;}
+          return managerPagePath;
+        }
         case 'worker': return workspacePath;
         default: return authPath;
       }
@@ -81,7 +85,13 @@ export default class App extends React.PureComponent<IProps, IState> {
               />
             </Route>
             <Route path={managerPagePath}>
-              <ManagerPage />
+              <ManagerPage
+                listWorkersApi={listWorkers}
+                listAvailableItemsApi={getAvailableItemsForManager}
+                setItemApi={setItem}
+                setWorkerScheduleApi={setWorkerSchedule}
+                checkOverlapApi={checkTimeOverlap}
+              />
             </Route>
             {
               this.isAuthenticated() &&

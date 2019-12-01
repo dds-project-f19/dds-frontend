@@ -33,41 +33,41 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120
+      minWidth: 120,
     },
     progressBar: {
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
     },
     maingrid: {
       display: "flex",
-      "flex-direction": "row"
+      "flex-direction": "row",
     },
     leftbox: {
-      width: "40%"
+      width: "40%",
     },
     rightbox: {
-      width: "55%"
+      width: "55%",
     },
     timegrid: {
       display: "flex",
-      "flex-direction": "column"
+      "flex-direction": "column",
     },
     card: {
-      padding: theme.spacing(2, 2, 2)
+      padding: theme.spacing(2, 2, 2),
     },
     listdiv: {
-      backgroundColor: theme.palette.background.paper
+      backgroundColor: theme.palette.background.paper,
     },
     listitem: {
-      margin: 20
+      margin: 20,
     },
     title: {
-      margin: 10
+      margin: 10,
     },
     subtitle: {},
     datepicker: {
-      padding: 5
-    }
+      padding: 5,
+    },
   })
 );
 
@@ -84,14 +84,14 @@ interface IProps {
   endDate: Date;
 
   handleUserChange: (event: React.ChangeEvent<{ value: unknown; }>) => void;
-  handleFieldChange: (event: React.ChangeEvent<{ value: unknown; }>) => void;
+  handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleWeekDaysChange: (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleStartTimeChange: (d: Date | null) => void;
   handleEndTimeChange: (d: Date | null) => void;
 }
 
 function mapToMenuItems(userList: string[]) {
-  return userList.map(username => <MenuItem value={username}>username</MenuItem>);
+  return userList.map(username => <MenuItem value={username}>{username}</MenuItem>);
 }
 
 const ManagerForm: React.FC<IProps> = ({
@@ -194,14 +194,13 @@ const ManagerForm: React.FC<IProps> = ({
                             <ListItemText primary={itemtype} />
                             <ListItemSecondaryAction>
                               <TextField
-                                id={`amount-of-${itemtype}`}
+                                id={`${itemtype}`}
                                 label="Amount"
                                 type="number"
                                 variant="outlined"
                                 value={count}
                                 disabled={itemsDisabled()}
                                 onChange={handleFieldChange}
-                              // TODO: Add on change listener
                               />
                             </ListItemSecondaryAction>
                           </ListItem>

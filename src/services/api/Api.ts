@@ -70,8 +70,8 @@ export default class Api {
     await this.actions.delete(`/manager/remove_worker/${username}`);
   };
 
-  public addItem: (item: IItemInfo) => Promise<void> = async (item) => {
-    await this.actions.patch('/manager/add_available_items', item);
+  public setItem: (item: IItemInfo) => Promise<void> = async (item) => {
+    await this.actions.patch('/manager/set_available_items', item);
   };
 
   public removeItem: (item: IItemInfo) => Promise<void> = async (item) => {

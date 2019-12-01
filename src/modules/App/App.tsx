@@ -33,6 +33,10 @@ export default class App extends React.PureComponent<IProps, IState> {
   public render(): JSX.Element {
     const {
       loginWorker,
+      takeItem,
+      returnItem,
+      getAvailableItemsForWorker,
+      getUsedItemsForWorker,
     } = this.state.api;
 
     const authPath = '/auth';
@@ -51,11 +55,16 @@ export default class App extends React.PureComponent<IProps, IState> {
               <AuthorizationPage
                 onSuccessRedirectPath={workspacePath}
                 authorizationApi={loginWorker}
-                registrationApi={async () => {}} // FIXME: remove sign up
+                registrationApi={async () => { }} // FIXME: remove sign up
               />
             </Route>
             <Route path={workspacePath}>
-              <WorkspacePage />
+              <WorkspacePage
+                availableItemsApi={getAvailableItemsForWorker}
+                usedItemsApi={getUsedItemsForWorker}
+                takeItemApi={takeItem}
+                returnItemApi={returnItem}
+              />
             </Route>
             {
               this.isAuthenticated() &&

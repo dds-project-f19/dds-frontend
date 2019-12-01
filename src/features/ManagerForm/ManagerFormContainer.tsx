@@ -2,9 +2,19 @@ import React from 'react';
 import ManagerForm from './ManagerForm';
 import update from 'react-addons-update';
 
-import { IWorkerList, IAvailableItems, IItemInfo, IWeekDays, ISetSchedule, ISchedule, IBasicResponse } from 'shared/types/models';
+import {
+  IWorkerList,
+  IAvailableItems,
+  IItemInfo,
+  IWeekDays,
+  ISetSchedule,
+  ISchedule,
+  IBasicResponse,
+} from 'shared/types/models';
+import { workspacesInfo } from 'shared/workspaces';
 
 interface IProps {
+  workspace: string;
   listWorkersApi: () => Promise<IWorkerList>;
   listAvailableItemsApi: () => Promise<IAvailableItems>;
   setItemApi: (item: IItemInfo) => Promise<void>;
@@ -50,19 +60,20 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     resText: "",
   };
 
-  private getCurTimeForRequest: () => ISchedule = () => {
-    const {startDate, endDate, weekdays} = this.state;
+  private getCurTimeForRequest: (state: IState) => ISchedule = (state) => {
+    const { startDate, endDate, weekdays } = state;
+    console.log(state)
 
     var myValues = Object.values(weekdays)
     myValues = myValues.reduce(
-      (out, bool, index) => bool ? out.concat(index) : out, 
+      (out, bool, index) => bool ? out.concat(index + 1) : out,
       []
     )
 
     return {
-      starttime:`${startDate.getHours()}:${startDate.getMinutes()}`,
+      starttime: `${startDate.getHours()}:${startDate.getMinutes()}`,
       endtime: `${endDate.getHours()}:${endDate.getMinutes()}`,
-      workdays: myValues,
+      workdays: myValues.join(),
     } as ISchedule;
   };
 
@@ -80,6 +91,15 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
   };
 
   private handleUserChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    const {
+      props: {
+        workspace,
+      },
+      state: {
+        itemslist,
+      },
+    } = this;
+
     this.setState({
       curUser: event.target.value as string,
       isUserWaiting: true,
@@ -88,9 +108,14 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
     const { items } = await this.props.listAvailableItemsApi();
 
+    let newItemsList: typeof itemslist = [];
+    for (const type in workspacesInfo[workspace].types) {
+      newItemsList.push((items || []).find(({ itemtype }) => itemtype === type) || { itemtype: type, count: 0 });
+    }
+
     if (this._isMounted) {
       this.setState({
-        itemslist: items,
+        itemslist: newItemsList,
         isUserWaiting: false,
       })
     } else {
@@ -100,14 +125,14 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
   private handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { itemslist } = this.state;
-    const {id, value} = event.target;
+    const { id, value } = event.target;
 
     if (parseInt(value) < 0) return
 
     var index = itemslist.findIndex(item => item.itemtype === id)
 
     this.setState({
-      itemslist: update(this.state.itemslist, {[index]: {count: {$set: value}}})
+      itemslist: update(this.state.itemslist, { [index]: { count: { $set: value } } })
     });
   };
 
@@ -115,10 +140,11 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
   private handleWeekDaysChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
     const { weekdays } = this.state;
 
+    const newWeekdays = { ...weekdays, [name]: event.target.checked };
     this.setState({
-      weekdays: { ...weekdays, [name]: event.target.checked },
+      weekdays: newWeekdays,
     });
-    this.getTimeSlotStatus();
+    this.getTimeSlotStatus({ ...this.state, weekdays: newWeekdays });
   };
 
   private handleStartTimeChange = async (time: Date | null) => {
@@ -137,7 +163,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
         endDate: newStartDate,
       });
     }
-    this.getTimeSlotStatus();
+    this.getTimeSlotStatus({ ...this.state, endDate: newStartDate });
   };
 
   private handleEndTimeChange = async (time: Date | null) => {
@@ -150,18 +176,17 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
       this.setState({
         endDate: newEndDate,
       })
-      this.getTimeSlotStatus();
+      this.getTimeSlotStatus({ ...this.state, endDate: newEndDate });
     }
   };
 
-  private getTimeSlotStatus = async () => {
+  private getTimeSlotStatus = async (state: IState) => {
     this.setState({
       isTimeWaiting: true,
       resText: "",
     })
 
-    console.log(this.getCurTimeForRequest());
-    const isFree = await this.props.checkOverlapApi(this.getCurTimeForRequest());
+    const isFree = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));
 
     this.setState({
       isTimeWaiting: false,
@@ -179,7 +204,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
   private requestData = async () => {
     const { users } = await this.props.listWorkersApi();
-    if (this._isMounted) {
+    if (this._isMounted && users) { // Maybe condition on `users` is wrong
       this.setState({
         userslist: users.map(({ username }) => username),
       });

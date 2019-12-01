@@ -91,7 +91,7 @@ interface IProps {
 }
 
 function mapToMenuItems(userList: string[]) {
-  return userList.map(username => <MenuItem value={username}>{username}</MenuItem>);
+  return userList.map(username => <MenuItem key={username} value={username}>{username}</MenuItem>);
 }
 
 const ManagerForm: React.FC<IProps> = ({
@@ -187,29 +187,34 @@ const ManagerForm: React.FC<IProps> = ({
                     Available items
                   </Typography>
                   <div className={classes.listdiv}>
-                    <List>{itemslist.map(({ itemtype, count }) =>
-                      React.cloneElement(
-                        (
-                          <ListItem className={classes.listitem}>
-                            <ListItemText primary={itemtype} />
-                            <ListItemSecondaryAction>
-                              <TextField
-                                id={`${itemtype}`}
-                                label="Amount"
-                                type="number"
-                                variant="outlined"
-                                value={count}
-                                disabled={itemsDisabled()}
-                                onChange={handleFieldChange}
-                              />
-                            </ListItemSecondaryAction>
-                          </ListItem>
-                        ) as React.ReactElement,
-                        {
-                          key: itemtype
-                        }
-                      )
-                    )}</List>
+                    <List>
+                      {itemslist.map(({ itemtype, count }) =>
+                        React.cloneElement(
+                          (
+                            <ListItem
+                              key={`${itemtype}`}
+                              className={classes.listitem}
+                            >
+                              <ListItemText primary={itemtype} />
+                              <ListItemSecondaryAction>
+                                <TextField
+                                  id={`${itemtype}`}
+                                  label="Amount"
+                                  type="number"
+                                  variant="outlined"
+                                  value={count}
+                                  disabled={itemsDisabled()}
+                                  onChange={handleFieldChange}
+                                />
+                              </ListItemSecondaryAction>
+                            </ListItem>
+                          ) as React.ReactElement,
+                          {
+                            key: itemtype
+                          }
+                        )
+                      )}
+                    </List>
                   </div>
                   <Button
                     variant="contained"
@@ -237,6 +242,7 @@ const ManagerForm: React.FC<IProps> = ({
                           const key = k as keyof IWeekDays;
                           return (
                             <FormControlLabel
+                              key={`${key}`}
                               control={
                                 <Checkbox
                                   checked={weekdays[key]}

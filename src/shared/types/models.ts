@@ -92,5 +92,5 @@ export interface ISetSchedule {
 export interface ISchedule {
   starttime: string,
   endtime: string,
-  workdays: number[],
+  workdays: string,
 }

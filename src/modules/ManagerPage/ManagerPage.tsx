@@ -25,6 +25,7 @@ const ManagerPage: React.FC<IProps> = ({
       maxWidth='xl'
     >
       <ManagerForm
+        workspace='garage' // TODO: retrieve workspace info
         listWorkersApi={listWorkersApi}
         listAvailableItemsApi={listAvailableItemsApi}
         setItemApi={setItemApi}

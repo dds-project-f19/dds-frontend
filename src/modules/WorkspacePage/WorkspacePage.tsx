@@ -1,17 +1,52 @@
 import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-interface IProps { }
+import { Workspace } from 'features/Workspace';
+import {
+  IAvailableItems,
+  IUsedItems,
+  IBasicResponse,
+  ITakeItemInfo,
+  IReturnItemInfo,
+} from 'shared/types/models';
 
-const WorkspacePage: React.FC<IProps> = () => {
+interface IProps {
+  availableItemsApi: () => Promise<IAvailableItems>;
+  usedItemsApi: () => Promise<IUsedItems>;
+  takeItemApi: (item: ITakeItemInfo) => Promise<IBasicResponse>;
+  returnItemApi: (item: IReturnItemInfo) => Promise<IBasicResponse>;
+}
+
+const useStyles = makeStyles((theme) => ({
+  WorkspacePageContainer: {
+    width: '100vw',
+    height: '100vh',
+    padding: '30px',
+    overflow: 'hidden',
+  },
+}));
+
+const WorkspacePage: React.FC<IProps> = ({
+  availableItemsApi,
+  usedItemsApi,
+  takeItemApi,
+  returnItemApi,
+}: IProps) => {
+  const classes = useStyles();
+
   return (
     <Container
       component='main'
       maxWidth='xl'
+      className={classes.WorkspacePageContainer}
     >
-      <div>
-        {'Workspace is under construction! Keep patience :)'}
-      </div>
+      <Workspace
+        availableItemsApi={availableItemsApi}
+        usedItemsApi={usedItemsApi}
+        takeItemApi={takeItemApi}
+        returnItemApi={returnItemApi}
+      />
     </Container>
   );
 };

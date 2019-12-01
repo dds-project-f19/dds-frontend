@@ -7,9 +7,10 @@ import {
   IReturnItemInfo,
   IItemInfo,
   IAvailableItems,
-  IUsedItems,
   IRegisterFields,
   IWorkerList,
+  IManagerUsedItems,
+  IManagerRegisterFields
 } from 'shared/types/models';
 import HttpActions from './HttpActions';
 
@@ -46,13 +47,14 @@ export default class Api {
   public getAvailableItemsForWorker: () => Promise<IAvailableItems>
     = async () => await this.actions.get('/worker/list_available_items');
 
-  public getUsedItemsForWorker: () => Promise<IUsedItems>
+  public getUsedItemsForWorker: () => Promise<IManagerUsedItems>
     = async () => await this.actions.get('/worker/list_taken_items');
 
 // ----------- Manager -----------
 
   public registerWorkerByManager: (data: IRegisterFields) => Promise<void> = async (data) => {
     // This token is useless since we're logged in as a manager
+    // eslint-disable-next-line
     const { token } = await this.actions.post('/manager/register_worker', data) as ILoginResponse;
   };
 
@@ -74,12 +76,12 @@ export default class Api {
   public getAvailableItemsForManager: () => Promise<IAvailableItems>
     = async () => await this.actions.get('/manager/list_available_items');
 
-  public getTakenItemsForManager: () => Promise<IUsedItems>
+  public getTakenItemsForManager: () => Promise<IManagerUsedItems>
     = async () => await this.actions.get('/manager/list_taken_items');
 
 // ----------- Admin -----------
 
-  public registerManager: (data: ICredentials) => Promise<void> = async (data) => {
+  public registerManager: (data: IManagerRegisterFields) => Promise<void> = async (data) => {
     await this.actions.post('/admin/register_manager', data);
   };
 }

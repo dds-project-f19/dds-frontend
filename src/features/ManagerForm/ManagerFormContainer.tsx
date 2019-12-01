@@ -1,7 +1,7 @@
 import React from 'react';
 import ManagerForm from './ManagerForm';
 
-import { IItemInfo, IWeekDays } from 'shared/types/models';
+import { IWeekDays } from 'shared/types/models';
 
 interface IProps { }
 

@@ -199,6 +199,7 @@ const ManagerForm: React.FC<IProps> = ({
                                 type="number"
                                 variant="outlined"
                                 value={count}
+                                disabled={itemsDisabled()}
                                 onChange={handleFieldChange}
                               // TODO: Add on change listener
                               />

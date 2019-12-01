@@ -9,7 +9,7 @@ export interface ICredentials {
 
 export interface ILoginResponse {
   token: string;
-  claim: 'worker'|'manager'|'admin'|'unknown';
+  claim: 'worker' | 'manager' | 'admin' | 'unknown';
 }
 
 export interface IWorkerInfo {
@@ -80,4 +80,17 @@ export interface IWeekDays { // TODO: Kill me for this (by @kzvdar42)
   fri: boolean;
   sat: boolean;
   sun: boolean;
+}
+
+export interface ISetSchedule {
+  username: string,
+  starttime: string,
+  endtime: string,
+  workdays: number[],
+}
+
+export interface ISchedule {
+  starttime: string,
+  endtime: string,
+  workdays: number[],
 }

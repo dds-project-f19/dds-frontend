@@ -10,7 +10,9 @@ import {
   IRegisterFields,
   IWorkerList,
   IManagerUsedItems,
-  IManagerRegisterFields
+  IManagerRegisterFields,
+  ISetSchedule,
+  ISchedule,
 } from 'shared/types/models';
 import HttpActions from './HttpActions';
 
@@ -50,6 +52,9 @@ export default class Api {
   public getUsedItemsForWorker: () => Promise<IManagerUsedItems>
     = async () => await this.actions.get('/worker/list_taken_items');
 
+  public getSchedule: () => Promise<ISchedule>
+    = async () => await this.actions.get('/worker/get_schedule');
+
 // ----------- Manager -----------
 
   public registerWorkerByManager: (data: IRegisterFields) => Promise<void> = async (data) => {
@@ -78,6 +83,15 @@ export default class Api {
 
   public getTakenItemsForManager: () => Promise<IManagerUsedItems>
     = async () => await this.actions.get('/manager/list_taken_items');
+
+  public setWorkerSchedule: (setShedule: ISetSchedule) => Promise<IBasicResponse>
+    = async (setShedule: ISetSchedule) => await this.actions.post('/manager/set_worker_schedule', setShedule);
+
+  public checkTimeOverlap: (shedule: ISchedule) => Promise<boolean>
+    = async (shedule: ISchedule) => {
+      const {overlap} = await this.actions.post('/manager/check_overlap', shedule);
+      return overlap
+    };
 
 // ----------- Admin -----------
 

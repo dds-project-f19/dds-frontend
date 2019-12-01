@@ -20,17 +20,23 @@ import Fade from "@material-ui/core/Fade";
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
-  KeyboardDatePicker
 } from "@material-ui/pickers";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
-import { IItemInfo } from 'shared/types/models';
+import { IItemInfo, IWeekDays } from 'shared/types/models';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
       margin: theme.spacing(1),
       minWidth: 120
+    },
+    progressBar: {
+      margin: theme.spacing(1)
     },
     maingrid: {
       display: "flex",
@@ -73,48 +79,20 @@ interface IProps {
   isUserWaiting: boolean;
   isTimeWaiting: boolean;
   curUser: string;
+  weekdays: IWeekDays,
   startDate: Date;
   endDate: Date;
 
   handleUserChange: (event: React.ChangeEvent<{ value: unknown; }>) => void;
   handleFieldChange: (event: React.ChangeEvent<{ value: unknown; }>) => void;
-  handleDateChange: (d: Date) => void;
-  handleStartTimeChange: (d: Date) => void;
-  handleEndTimeChange: (d: Date) => void;
+  handleWeekDaysChange: (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleStartTimeChange: (d: Date | null) => void;
+  handleEndTimeChange: (d: Date | null) => void;
 }
 
 function mapToMenuItems(userList: string[]) {
   return userList.map(username => <MenuItem value={username}>username</MenuItem>);
 }
-
-function mapToItemsList(itemsList: IItemInfo[], onChange: (e) => void) {
-  const classes = useStyles();
-
-  return itemsList.map(({ itemtype, count }) =>
-    React.cloneElement(
-      (
-        <ListItem className={classes.listitem}>
-          <ListItemText primary={itemtype} />
-          <ListItemSecondaryAction>
-            <TextField
-              id={`amount-of-${itemtype}`}
-              label="Amount"
-              type="number"
-              variant="outlined"
-              value={count}
-              onChange={onChange}
-              // TODO: Add on change listener
-            />
-          </ListItemSecondaryAction>
-        </ListItem>
-      ) as React.ReactElement,
-      {
-        key: itemtype
-      }
-    )
-  );
-}
-
 
 const ManagerForm: React.FC<IProps> = ({
   userslist,
@@ -124,12 +102,13 @@ const ManagerForm: React.FC<IProps> = ({
   isUserWaiting,
   isTimeWaiting,
   curUser,
+  weekdays,
   startDate,
   endDate,
 
   handleUserChange,
   handleFieldChange,
-  handleDateChange,
+  handleWeekDaysChange,
   handleStartTimeChange,
   handleEndTimeChange,
 }: IProps) => {
@@ -137,6 +116,16 @@ const ManagerForm: React.FC<IProps> = ({
 
   //TODO: import `freeText` from `ManagerFormContainer`.
   const freeText = "Time slot is free";
+
+  const keyToLabel = {
+    mon: "Monday",
+    tue: "Tuesday",
+    wed: "Wednesday",
+    thu: "Thursday",
+    fri: "Friday",
+    sat: "Saturday",
+    sun: "Sunday"
+  };
 
   const timePickersDisabled = () => {
     return isUserWaiting && isTimeWaiting;
@@ -177,10 +166,18 @@ const ManagerForm: React.FC<IProps> = ({
             onChange={handleUserChange}
             labelWidth={labelWidth}
           >
-            <MenuItem value={curUser} disabled />
             {mapToMenuItems(userslist)}
           </Select>
         </FormControl>
+        <Fade
+          in={isUserWaiting}
+          style={{
+            transitionDelay: isUserWaiting ? "800ms" : "0ms"
+          }}
+          unmountOnExit
+        >
+          <CircularProgress className={classes.progressBar} />
+        </Fade>
         <Grid className={classes.maingrid}>
           <Grow in={boxesIn()}>
             <Box component="span" m={1} className={classes.leftbox}>
@@ -190,8 +187,37 @@ const ManagerForm: React.FC<IProps> = ({
                     Available items
                   </Typography>
                   <div className={classes.listdiv}>
-                    <List>{mapToItemsList(itemslist, handleFieldChange)}</List>
+                    <List>{itemslist.map(({ itemtype, count }) =>
+                      React.cloneElement(
+                        (
+                          <ListItem className={classes.listitem}>
+                            <ListItemText primary={itemtype} />
+                            <ListItemSecondaryAction>
+                              <TextField
+                                id={`amount-of-${itemtype}`}
+                                label="Amount"
+                                type="number"
+                                variant="outlined"
+                                value={count}
+                                onChange={handleFieldChange}
+                              // TODO: Add on change listener
+                              />
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                        ) as React.ReactElement,
+                        {
+                          key: itemtype
+                        }
+                      )
+                    )}</List>
                   </div>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isUserWaiting}
+                  >
+                    Save
+                  </Button>
                 </Grid>
               </Card>
             </Box>
@@ -201,21 +227,29 @@ const ManagerForm: React.FC<IProps> = ({
               <Card className={classes.card}>
                 <Grid className={classes.timegrid}>
                   <div>
-                    <FormControl className={classes.datepicker}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        disabled={timePickersDisabled()}
-                        variant="inline"
-                        format="MM/dd/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date picker inline"
-                        value={startDate}
-                        onChange={handleDateChange}
-                        KeyboardButtonProps={{
-                          "aria-label": "change date"
-                        }}
-                      />
+                    <FormControl
+                      component="fieldset"
+                      className={classes.formControl}
+                    >
+                      <FormLabel component="legend">Weekdays</FormLabel>
+                      <FormGroup>
+                        {Object.keys(weekdays).map((k) => {
+                          const key = k as keyof IWeekDays;
+                          return (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={weekdays[key]}
+                                  onChange={handleWeekDaysChange(key)}
+                                  value={key}
+                                  color="primary"
+                                />
+                              }
+                              label={keyToLabel[key]}
+                            />
+                          );
+                        })}
+                      </FormGroup>
                     </FormControl>
                     <FormControl className={classes.datepicker}>
                       <KeyboardTimePicker
@@ -247,16 +281,22 @@ const ManagerForm: React.FC<IProps> = ({
                   <Typography variant="h6" className={classes.subtitle}>
                     {resText}
                   </Typography>
-                  <Fade in={isFree()}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      disabled={isTimeWaiting}
-                    >
-                      Assign
-                    </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={isTimeWaiting && isFree()}
+                  >
+                    Assign
+                  </Button>
+                  <Fade
+                    in={isTimeWaiting}
+                    style={{
+                      transitionDelay: isTimeWaiting ? "800ms" : "0ms"
+                    }}
+                    unmountOnExit
+                  >
+                    <CircularProgress className={classes.progressBar} />
                   </Fade>
-                  {isTimeWaiting && <CircularProgress />}
                 </Grid>
               </Card>
             </Box>

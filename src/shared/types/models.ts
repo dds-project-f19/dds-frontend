@@ -71,3 +71,13 @@ export interface IWorkerList {
 export interface IManagerRegisterFields extends IRegisterFields {
   gametype: string;
 }
+
+export interface IWeekDays { // TODO: Kill me for this (by @kzvdar42)
+  mon: boolean;
+  tue: boolean;
+  wed: boolean;
+  thu: boolean;
+  fri: boolean;
+  sat: boolean;
+  sun: boolean;
+}

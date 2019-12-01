@@ -1,24 +1,13 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
-import TextField from "@material-ui/core/TextField";
 import ManagerForm from './ManagerForm';
-import { string } from 'prop-types';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    listitem: {
-      margin: 20,
-    },
-  })
-);
+import { IItemInfo, IWeekDays } from 'shared/types/models';
 
 interface IProps { }
 
 interface IState {
   curUser: string;
+  weekdays: IWeekDays,
   startDate: Date;
   endDate: Date;
   isUserWaiting: boolean;
@@ -34,6 +23,15 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
   public state: IState = {
     curUser: "",
+    weekdays: {
+      mon: false,
+      tue: false,
+      wed: false,
+      thu: false,
+      fri: false,
+      sat: false,
+      sun: false,
+    },
     startDate: new Date(),
     isUserWaiting: false,
     isTimeWaiting: false,
@@ -54,9 +52,9 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     return tempDate;
   };
 
-  private handleUserChange = (event: React.ChangeEvent<{ value: string }>) => {
+  private handleUserChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     this.setState({
-      curUser: event.target.value,
+      curUser: event.target.value as string,
       isUserWaiting: true,
       resText: "",
     })
@@ -74,18 +72,20 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     // TODO
   };
 
-  private handleDateChange = async (date: Date) => {
-    const { startDate, endDate } = this.state;
-    const newEndDate = this.getTimewithDate(endDate, startDate);
+
+  private handleWeekDaysChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { weekdays } = this.state;
 
     this.setState({
-      startDate: date,
-      endDate: newEndDate,
+      weekdays: { ...weekdays, [name]: event.target.checked },
     });
     this.getTimeSlotStatus();
   };
 
-  private handleStartTimeChange = async (time: Date) => {
+  private handleStartTimeChange = async (time: Date | null) => {
+    if (time === null) {
+      throw new Error('Date is null');
+    }
     const { startDate, endDate } = this.state;
     const newStartDate = this.getTimewithDate(time, startDate);
 
@@ -101,7 +101,10 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     this.getTimeSlotStatus();
   };
 
-  private handleEndTimeChange = async (time: Date) => {
+  private handleEndTimeChange = async (time: Date | null) => {
+    if (time === null) {
+      throw new Error('Date is null');
+    }
     const { startDate } = this.state;
     const newEndDate = this.getTimewithDate(time, startDate);
     if (newEndDate.valueOf() > startDate.valueOf()) {
@@ -140,6 +143,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     const {
       state: {
         curUser,
+        weekdays,
         startDate,
         endDate,
         isTimeWaiting,
@@ -148,7 +152,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
       },
       handleUserChange,
       handleFieldChange,
-      handleDateChange,
+      handleWeekDaysChange,
       handleStartTimeChange,
       handleEndTimeChange,
     } = this;
@@ -156,17 +160,18 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     return (
       <ManagerForm
         userslist={["User0", "User1"]}
-        itemslist={}
+        itemslist={[]}
         resText={resText}
         isUserWaiting={isUserWaiting}
         isTimeWaiting={isTimeWaiting}
         curUser={curUser}
+        weekdays={weekdays}
         startDate={startDate}
         endDate={endDate}
 
         handleUserChange={handleUserChange}
         handleFieldChange={handleFieldChange}
-        handleDateChange={handleDateChange}
+        handleWeekDaysChange={handleWeekDaysChange}
         handleStartTimeChange={handleStartTimeChange}
         handleEndTimeChange={handleEndTimeChange}
       />

@@ -7,7 +7,7 @@ import { IRegisterFields } from 'shared/types/models';
 interface IProps {
   onRegisterAttempt: (regFields: IRegisterFields) => Promise<void>;
   loginFormPath: string;
-  onSuccessRedirectPath: string;
+  onSuccess: () => string;
 }
 
 interface IState {
@@ -78,7 +78,7 @@ export default class RegistrationFormContainer extends React.PureComponent<IProp
     const {
       props: {
         loginFormPath,
-        onSuccessRedirectPath,
+        onSuccess,
       },
       state: {
         formFields,
@@ -91,7 +91,7 @@ export default class RegistrationFormContainer extends React.PureComponent<IProp
 
     if (toRedirect) {
       return (
-        <Redirect to={onSuccessRedirectPath} />
+        <Redirect to={onSuccess()} />
       );
     }
 

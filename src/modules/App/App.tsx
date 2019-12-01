@@ -6,6 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { AuthorizationPage } from 'modules/AuthorizationPage';
 import { WorkspacePage } from 'modules/WorkspacePage';
 import { Api } from 'services/api';
+import { ManagerPage } from 'modules/ManagerPage';
 
 makeStyles((theme) => ({
   '@global': {
@@ -41,6 +42,19 @@ export default class App extends React.PureComponent<IProps, IState> {
 
     const authPath = '/auth';
     const workspacePath = '/workspace';
+    const managerPagePath = '/manage';
+
+    const redirectTo = () => {
+      const { role } = this.state.api;
+      console.log('HEY!')
+      console.log(role)
+      switch(role) {
+        case 'manager': {
+          return managerPagePath;}
+        case 'worker': return workspacePath;
+        default: return authPath;
+      }
+    }
 
     return (
       <BrowserRouter>
@@ -53,7 +67,7 @@ export default class App extends React.PureComponent<IProps, IState> {
           <Switch>
             <Route path={authPath}>
               <AuthorizationPage
-                onSuccessRedirectPath={workspacePath}
+                onSuccess={redirectTo}
                 authorizationApi={loginWorker}
                 registrationApi={async () => { }} // FIXME: remove sign up
               />
@@ -65,6 +79,9 @@ export default class App extends React.PureComponent<IProps, IState> {
                 takeItemApi={takeItem}
                 returnItemApi={returnItem}
               />
+            </Route>
+            <Route path={managerPagePath}>
+              <ManagerPage />
             </Route>
             {
               this.isAuthenticated() &&

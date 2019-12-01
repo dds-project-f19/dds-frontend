@@ -43,9 +43,9 @@ export interface IUsedItem {
   assignedtoslot: string;
 }
 
-export type IManagerUsedItem = {
+export interface IManagerUsedItem extends IUsedItem {
   takenby: string;
-} & IUsedItem;
+}
 
 export interface IManagerUsedItems {
   items: IManagerUsedItem[];
@@ -68,6 +68,6 @@ export interface IWorkerList {
   users: IWorkerInfo[];
 }
 
-export type IManagerRegisterFields = {
+export interface IManagerRegisterFields extends IRegisterFields {
   gametype: string;
-} & IRegisterFields;
+}

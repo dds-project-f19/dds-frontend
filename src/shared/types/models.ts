@@ -9,7 +9,7 @@ export interface ICredentials {
 
 export interface ILoginResponse {
   token: string;
-  claim: 'worker' | 'manager' | 'admin' | 'unknown';
+  claim: 'worker'|'manager'|'admin'|'unknown';
 }
 
 export interface IWorkerInfo {
@@ -83,14 +83,18 @@ export interface IWeekDays { // TODO: Kill me for this (by @kzvdar42)
 }
 
 export interface ISetSchedule {
-  username: string,
-  starttime: string,
-  endtime: string,
-  workdays: number[],
+  username: string;
+  starttime: string;
+  endtime: string;
+  workdays: number[];
 }
 
 export interface ISchedule {
-  starttime: string,
-  endtime: string,
-  workdays: string,
+  starttime: string;
+  endtime: string;
+  workdays: string;
+}
+
+export interface IOverlapCheckResponse {
+  overlap: boolean;
 }

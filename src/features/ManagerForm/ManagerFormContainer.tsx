@@ -37,11 +37,11 @@ interface IState {
 export default class ManagerFormContainer extends React.PureComponent<IProps, IState> {
   private _isMounted: boolean = false; // TODO: Cansellable promises
 
-  public freeText = () => "Time slot is free";
-  public occupiedText = () => "This time slot is already occupied!";
+  public freeText = () => 'Time slot is free';
+  public occupiedText = () => 'This time slot is already occupied!';
 
   public state: IState = {
-    curUser: "",
+    curUser: '',
     userslist: [],
     itemslist: [],
     weekdays: {
@@ -57,7 +57,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     isUserWaiting: false,
     isTimeWaiting: false,
     endDate: new Date(),
-    resText: "",
+    resText: '',
   };
 
   private getCurTimeForRequest: (state: IState) => ISchedule = (state) => {
@@ -103,7 +103,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     this.setState({
       curUser: event.target.value as string,
       isUserWaiting: true,
-      resText: "",
+      resText: '',
     });
 
     const { items } = await this.props.listAvailableItemsApi();
@@ -183,7 +183,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
   private getTimeSlotStatus = async (state: IState) => {
     this.setState({
       isTimeWaiting: true,
-      resText: "",
+      resText: '',
     })
 
     const isFree = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));

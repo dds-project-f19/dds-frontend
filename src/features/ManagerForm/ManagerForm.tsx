@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
@@ -29,47 +29,45 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import { IItemInfo, IWeekDays } from 'shared/types/models';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    formControl: {
-      margin: theme.spacing(1),
-      minWidth: 120,
-    },
-    progressBar: {
-      margin: theme.spacing(1),
-    },
-    maingrid: {
-      display: 'flex',
-      flexDirection: 'row',
-    },
-    leftbox: {
-      width: '40%',
-    },
-    rightbox: {
-      width: '55%',
-    },
-    timegrid: {
-      display: 'flex',
-      flexDirection: 'column',
-    },
-    card: {
-      padding: theme.spacing(2, 2, 2),
-    },
-    listdiv: {
-      backgroundColor: theme.palette.background.paper,
-    },
-    listitem: {
-      margin: 20,
-    },
-    title: {
-      margin: 10,
-    },
-    subtitle: {},
-    datepicker: {
-      padding: 5,
-    },
-  })
-);
+const useStyles = makeStyles((theme) => ({
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
+  progressBar: {
+    margin: theme.spacing(1),
+  },
+  maingrid: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  leftbox: {
+    width: '40%',
+  },
+  rightbox: {
+    width: '55%',
+  },
+  timegrid: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  card: {
+    padding: theme.spacing(2, 2, 2),
+  },
+  listdiv: {
+    backgroundColor: theme.palette.background.paper,
+  },
+  listitem: {
+    margin: 20,
+  },
+  title: {
+    margin: 10,
+  },
+  subtitle: {},
+  datepicker: {
+    padding: 5,
+  },
+}));
 
 interface IProps {
   userslist: string[];
@@ -79,7 +77,7 @@ interface IProps {
   isUserWaiting: boolean;
   isTimeWaiting: boolean;
   curUser: string;
-  weekdays: IWeekDays,
+  weekdays: IWeekDays;
   startDate: Date;
   endDate: Date;
 
@@ -93,6 +91,19 @@ interface IProps {
 function mapToMenuItems(userList: string[]) {
   return userList.map(username => <MenuItem key={username} value={username}>{username}</MenuItem>);
 }
+
+// TODO: import `freeText` from `ManagerFormContainer`.
+const freeText = 'Time slot is free';
+
+const keyToLabel = {
+  mon: 'Monday',
+  tue: 'Tuesday',
+  wed: 'Wednesday',
+  thu: 'Thursday',
+  fri: 'Friday',
+  sat: 'Saturday',
+  sun: 'Sunday',
+};
 
 const ManagerForm: React.FC<IProps> = ({
   userslist,
@@ -113,19 +124,6 @@ const ManagerForm: React.FC<IProps> = ({
   handleEndTimeChange,
 }: IProps) => {
   const classes = useStyles();
-
-  // TODO: import `freeText` from `ManagerFormContainer`.
-  const freeText = 'Time slot is free';
-
-  const keyToLabel = {
-    mon: 'Monday',
-    tue: 'Tuesday',
-    wed: 'Wednesday',
-    thu: 'Thursday',
-    fri: 'Friday',
-    sat: 'Saturday',
-    sun: 'Sunday',
-  };
 
   const timePickersDisabled = () => {
     return isUserWaiting && isTimeWaiting;
@@ -311,6 +309,6 @@ const ManagerForm: React.FC<IProps> = ({
       </div>
     </MuiPickersUtilsProvider>
   );
-}
+};
 
 export default ManagerForm;

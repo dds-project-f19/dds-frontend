@@ -2,7 +2,14 @@ import React from 'react';
 import Container from '@material-ui/core/Container';
 
 import { ManagerForm } from 'features/ManagerForm';
-import { IWorkerList, IAvailableItems, IItemInfo, IWeekDays, ISetSchedule, ISchedule, IBasicResponse } from 'shared/types/models';
+import {
+  IWorkerList,
+  IAvailableItems,
+  IItemInfo,
+  ISetSchedule,
+  ISchedule,
+  IBasicResponse,
+} from 'shared/types/models';
 
 interface IProps {
   listWorkersApi: () => Promise<IWorkerList>;

@@ -34,11 +34,11 @@ interface IState {
   resText: string;
 }
 
+const freeText = 'Time slot is free';
+const occupiedText = 'This time slot is already occupied!';
+
 export default class ManagerFormContainer extends React.PureComponent<IProps, IState> {
   private _isMounted: boolean = false; // TODO: Cansellable promises
-
-  public freeText = () => 'Time slot is free';
-  public occupiedText = () => 'This time slot is already occupied!';
 
   public state: IState = {
     curUser: '',
@@ -62,27 +62,22 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
   private getCurTimeForRequest: (state: IState) => ISchedule = (state) => {
     const { startDate, endDate, weekdays } = state;
-    console.log(state)
 
-    var myValues = Object.values(weekdays)
-    myValues = myValues.reduce(
+    const workdaysList = Object.values(weekdays).reduce(
       (out, bool, index) => bool ? out.concat(index + 1) : out,
       []
-    )
+    );
 
     return {
       starttime: `${startDate.getHours()}:${startDate.getMinutes()}`,
       endtime: `${endDate.getHours()}:${endDate.getMinutes()}`,
-      workdays: myValues.join(),
-    } as ISchedule;
+      workdays: workdaysList.join(),
+    };
   };
 
-  private getTimewithDate: (time: Date, date: Date) => Date = (
-    time: Date,
-    date: Date
-  ) => {
+  private getTimewithDate: (time: Date, date: Date) => Date = (time, date) => {
     // Look, how beatufull! (No!)
-    let tempDate = new Date(date.valueOf());
+    const tempDate = new Date(date.valueOf());
     tempDate.setHours(time.getHours());
     tempDate.setMinutes(time.getMinutes());
     tempDate.setSeconds(time.getSeconds());
@@ -108,7 +103,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
     const { items } = await this.props.listAvailableItemsApi();
 
-    let newItemsList: typeof itemslist = [];
+    const newItemsList: typeof itemslist = [];
     for (const type in workspacesInfo[workspace].types) {
       newItemsList.push((items || []).find(({ itemtype }) => itemtype === type) || { itemtype: type, count: 0 });
     }
@@ -117,9 +112,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
       this.setState({
         itemslist: newItemsList,
         isUserWaiting: false,
-      })
-    } else {
-      return
+      });
     }
   };
 
@@ -127,12 +120,12 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     const { itemslist } = this.state;
     const { id, value } = event.target;
 
-    if (parseInt(value) < 0) return
+    if (parseInt(value) < 0) return;
 
-    var index = itemslist.findIndex(item => item.itemtype === id)
+    const index = itemslist.findIndex(item => item.itemtype === id);
 
     this.setState({
-      itemslist: update(this.state.itemslist, { [index]: { count: { $set: value } } })
+      itemslist: update(this.state.itemslist, { [index]: { count: { $set: value } } }),
     });
   };
 
@@ -175,31 +168,27 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     if (newEndDate.valueOf() > startDate.valueOf()) {
       this.setState({
         endDate: newEndDate,
-      })
+      });
       this.getTimeSlotStatus({ ...this.state, endDate: newEndDate });
     }
   };
 
   private getTimeSlotStatus = async (state: IState) => {
+    if (!this._isMounted) return;
+
     this.setState({
       isTimeWaiting: true,
       resText: '',
-    })
+    });
 
     const isFree = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));
 
+    if (!this._isMounted) return;
+
     this.setState({
       isTimeWaiting: false,
-    })
-    if (isFree) {
-      this.setState({
-        resText: this.freeText(),
-      })
-    } else {
-      this.setState({
-        resText: this.occupiedText(),
-      })
-    }
+      resText: isFree ? freeText : occupiedText,
+    });
   };
 
   private requestData = async () => {
@@ -260,5 +249,4 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
       />
     );
   }
-
 }

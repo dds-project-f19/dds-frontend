@@ -73,8 +73,8 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   workspace: string;
 
-  userslist: string[];
-  itemslist: IItemInfo[];
+  usersList: string[];
+  itemsList: IItemInfo[];
 
   resText: string;
   isUserWaiting: boolean;
@@ -89,6 +89,7 @@ interface IProps {
   handleWeekDaysChange: (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleStartTimeChange: (d: Date | null) => void;
   handleEndTimeChange: (d: Date | null) => void;
+  handleItemsUpdateSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   handleScheduleSubmit: (name: string) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
@@ -116,8 +117,8 @@ const keyToLabel = {
 const WorkerScheduleForm: React.FC<IProps> = ({
   workspace,
 
-  userslist,
-  itemslist,
+  usersList,
+  itemsList,
 
   resText,
   isUserWaiting,
@@ -132,6 +133,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
   handleWeekDaysChange,
   handleStartTimeChange,
   handleEndTimeChange,
+  handleItemsUpdateSubmit,
   handleScheduleSubmit,
 }: IProps) => {
   const classes = useStyles();
@@ -172,7 +174,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
             onChange={handleUserChange}
             labelWidth={labelWidth}
           >
-            {mapToMenuItems(userslist)}
+            {mapToMenuItems(usersList)}
           </Select>
         </FormControl>
         <Fade
@@ -194,7 +196,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
                   </Typography>
                   <div className={classes.listdiv}>
                     <List>
-                      {itemslist.map(({ itemtype, count }) =>
+                      {itemsList.map(({ itemtype, count }) =>
                         React.cloneElement(
                           (
                             <ListItem
@@ -226,6 +228,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
                     variant='contained'
                     color='primary'
                     disabled={isUserWaiting}
+                    onClick={handleItemsUpdateSubmit}
                   >
                     {'Save'}
                   </Button>

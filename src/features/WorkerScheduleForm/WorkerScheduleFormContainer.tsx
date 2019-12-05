@@ -24,8 +24,8 @@ interface IProps {
 
 interface IState {
   curUser: string;
-  userslist: string[];
-  itemslist: IItemInfo[];
+  usersList: string[];
+  itemsList: IItemInfo[];
   weekdays: IWeekDays,
   startDate: Date;
   endDate: Date;
@@ -40,8 +40,8 @@ const occupiedText = 'This time slot is already occupied!';
 export default class WorkerScheduleFormContainer extends React.PureComponent<IProps, IState> {
   public state: IState = {
     curUser: '',
-    userslist: [],
-    itemslist: [],
+    usersList: [],
+    itemsList: [],
     weekdays: {
       mon: false,
       tue: false,
@@ -104,7 +104,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
         workspace,
       },
       state: {
-        itemslist,
+        itemsList,
       },
     } = this;
 
@@ -117,29 +117,30 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     const { items } = await this.props.listAvailableItemsApi();
     // TODO: retrieve and set worker schedule (issue #18)
 
-    const newItemsList: typeof itemslist = [];
+    const newItemsList: typeof itemsList = [];
     for (const type in workspacesInfo[workspace].types) {
       newItemsList.push((items || []).find(({ itemtype }) => itemtype === type) || { itemtype: type, count: 0 });
     }
 
     if (this._isMounted) {
       this.setState({
-        itemslist: newItemsList,
+        itemsList: newItemsList,
         isUserWaiting: false,
       });
     }
   };
 
   private handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { itemslist } = this.state;
+    const { itemsList } = this.state;
     const { id, value } = event.target;
+    const numValue: number = parseInt(value);
 
-    if (parseInt(value) < 0) return;
+    if (numValue < 0) return;
 
-    const index = itemslist.findIndex(item => item.itemtype === id);
+    const index = itemsList.findIndex(item => item.itemtype === id);
 
     this.setState({
-      itemslist: update(this.state.itemslist, { [index]: { count: { $set: value } } }),
+      itemsList: update(this.state.itemsList, { [index]: { count: { $set: numValue } } }),
     });
   };
 
@@ -209,33 +210,47 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     const { users } = await this.props.listWorkersApi();
     if (this._isMounted && users) { // Maybe condition on `users` is wrong
       this.setState({
-        userslist: users.map(({ username }) => username),
+        usersList: users.map(({ username }) => username),
       });
     }
   };
 
-  private handleScheduleSubmit: (name: string) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-    = (name) => (event) => {
-      event.preventDefault();
+  private handleItemsUpdateSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (event) => {
+    event.preventDefault();
 
-      const {
-        props: {
-          setWorkerScheduleApi,
-        },
-        state: {
-          startDate,
-          endDate,
-          weekdays,
-        },
-      } = this;
+    const {
+      props: {
+        setItemApi,
+      },
+      state: {
+        itemsList,
+      },
+    } = this;
 
-      setWorkerScheduleApi({
-        username: name,
-        starttime: WorkerScheduleFormContainer.getTime(startDate),
-        endtime: WorkerScheduleFormContainer.getTime(endDate),
-        workdays: WorkerScheduleFormContainer.getWorkdays(weekdays),
-      });
-    };
+    itemsList.forEach((itemInfo) => setItemApi(itemInfo));
+  };
+
+  private handleScheduleSubmit: (name: string) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (name) => (event) => {
+    event.preventDefault();
+
+    const {
+      props: {
+        setWorkerScheduleApi,
+      },
+      state: {
+        startDate,
+        endDate,
+        weekdays,
+      },
+    } = this;
+
+    setWorkerScheduleApi({
+      username: name,
+      starttime: WorkerScheduleFormContainer.getTime(startDate),
+      endtime: WorkerScheduleFormContainer.getTime(endDate),
+      workdays: WorkerScheduleFormContainer.getWorkdays(weekdays),
+    });
+  };
 
   render(): JSX.Element {
     const {
@@ -244,8 +259,8 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       },
       state: {
         curUser,
-        userslist,
-        itemslist,
+        usersList,
+        itemsList,
         weekdays,
         startDate,
         endDate,
@@ -258,6 +273,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       handleWeekDaysChange,
       handleStartTimeChange,
       handleEndTimeChange,
+      handleItemsUpdateSubmit,
       handleScheduleSubmit,
     } = this;
 
@@ -265,8 +281,8 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       <WorkerScheduleForm
         workspace={workspace}
 
-        userslist={userslist}
-        itemslist={itemslist}
+        usersList={usersList}
+        itemsList={itemsList}
         resText={resText}
         isUserWaiting={isUserWaiting}
         isTimeWaiting={isTimeWaiting}
@@ -280,6 +296,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
         handleWeekDaysChange={handleWeekDaysChange}
         handleStartTimeChange={handleStartTimeChange}
         handleEndTimeChange={handleEndTimeChange}
+        handleItemsUpdateSubmit={handleItemsUpdateSubmit}
         handleScheduleSubmit={handleScheduleSubmit}
       />
     );

@@ -38,8 +38,6 @@ const freeText = 'Time slot is free';
 const occupiedText = 'This time slot is already occupied!';
 
 export default class WorkerScheduleFormContainer extends React.PureComponent<IProps, IState> {
-  private _isMounted: boolean = false; // TODO: Cansellable promises
-
   public state: IState = {
     curUser: '',
     userslist: [],
@@ -60,22 +58,37 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     resText: '',
   };
 
+  private _isMounted: boolean = false; // TODO: Cansellable promises
+
+  componentDidMount() {
+    this._isMounted = true;
+    this.requestData();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
+  private static getTime: (date: Date) => string
+    = (date) => `${date.getUTCHours()}:${date.getUTCMinutes()}`;
+
+  private static getWorkdays: (checkList: IWeekDays) => string
+    = (checkList) => Object.values(checkList).reduce(
+      (out, val, index) => val ? out.concat(index + 1) : out, // FIXME: UTC week day
+      []
+    ).join();
+
   private getCurTimeForRequest: (state: IState) => ISchedule = (state) => {
     const { startDate, endDate, weekdays } = state;
 
-    const workdaysList = Object.values(weekdays).reduce(
-      (out, bool, index) => bool ? out.concat(index + 1) : out,
-      []
-    );
-
     return {
-      starttime: `${startDate.getHours()}:${startDate.getMinutes()}`,
-      endtime: `${endDate.getHours()}:${endDate.getMinutes()}`,
-      workdays: workdaysList.join(),
+      starttime: WorkerScheduleFormContainer.getTime(startDate),
+      endtime: WorkerScheduleFormContainer.getTime(endDate),
+      workdays: WorkerScheduleFormContainer.getWorkdays(weekdays),
     };
   };
 
-  private getTimewithDate: (time: Date, date: Date) => Date = (time, date) => {
+  private getTimeWithDate: (time: Date, date: Date) => Date = (time, date) => {
     // Look, how beatufull! (No!)
     const tempDate = new Date(date.valueOf());
     tempDate.setHours(time.getHours());
@@ -102,6 +115,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     });
 
     const { items } = await this.props.listAvailableItemsApi();
+    // TODO: retrieve and set worker schedule (issue #18)
 
     const newItemsList: typeof itemslist = [];
     for (const type in workspacesInfo[workspace].types) {
@@ -137,7 +151,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     this.setState({
       weekdays: newWeekdays,
     });
-    this.getTimeSlotStatus({ ...this.state, weekdays: newWeekdays });
+    this.getTimeSlotStatus({ ...this.state, weekdays: newWeekdays }); // TODO: handle better
   };
 
   private handleStartTimeChange = async (time: Date | null) => {
@@ -145,7 +159,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       throw new Error('Date is null');
     }
     const { startDate, endDate } = this.state;
-    const newStartDate = this.getTimewithDate(time, startDate);
+    const newStartDate = this.getTimeWithDate(time, startDate);
 
     this.setState({
       startDate: newStartDate,
@@ -156,7 +170,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
         endDate: newStartDate,
       });
     }
-    this.getTimeSlotStatus({ ...this.state, endDate: newStartDate });
+    this.getTimeSlotStatus({ ...this.state, endDate: newStartDate }); // TODO: handle better
   };
 
   private handleEndTimeChange = async (time: Date | null) => {
@@ -164,12 +178,12 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       throw new Error('Date is null');
     }
     const { startDate } = this.state;
-    const newEndDate = this.getTimewithDate(time, startDate);
+    const newEndDate = this.getTimeWithDate(time, startDate);
     if (newEndDate.valueOf() > startDate.valueOf()) {
       this.setState({
         endDate: newEndDate,
       });
-      this.getTimeSlotStatus({ ...this.state, endDate: newEndDate });
+      this.getTimeSlotStatus({ ...this.state, endDate: newEndDate }); // TODO: handle better
     }
   };
 
@@ -181,14 +195,14 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       resText: '',
     });
 
-    const isFree = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));
+    const isOccupied = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));
 
-    if (!this._isMounted) return;
-
-    this.setState({
-      isTimeWaiting: false,
-      resText: isFree ? freeText : occupiedText,
-    });
+    if (this._isMounted) {
+      this.setState({
+        isTimeWaiting: false,
+        resText: isOccupied ? occupiedText : freeText,
+      });
+    }
   };
 
   private requestData = async () => {
@@ -200,14 +214,28 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     }
   };
 
-  componentDidMount() {
-    this._isMounted = true;
-    this.requestData();
-  }
+  private handleScheduleSubmit: (name: string) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    = (name) => (event) => {
+      event.preventDefault();
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
+      const {
+        props: {
+          setWorkerScheduleApi,
+        },
+        state: {
+          startDate,
+          endDate,
+          weekdays,
+        },
+      } = this;
+
+      setWorkerScheduleApi({
+        username: name,
+        starttime: WorkerScheduleFormContainer.getTime(startDate),
+        endtime: WorkerScheduleFormContainer.getTime(endDate),
+        workdays: WorkerScheduleFormContainer.getWorkdays(weekdays),
+      });
+    };
 
   render(): JSX.Element {
     const {
@@ -230,6 +258,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       handleWeekDaysChange,
       handleStartTimeChange,
       handleEndTimeChange,
+      handleScheduleSubmit,
     } = this;
 
     return (
@@ -251,6 +280,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
         handleWeekDaysChange={handleWeekDaysChange}
         handleStartTimeChange={handleStartTimeChange}
         handleEndTimeChange={handleEndTimeChange}
+        handleScheduleSubmit={handleScheduleSubmit}
       />
     );
   }

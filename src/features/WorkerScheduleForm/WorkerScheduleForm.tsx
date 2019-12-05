@@ -89,6 +89,7 @@ interface IProps {
   handleWeekDaysChange: (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleStartTimeChange: (d: Date | null) => void;
   handleEndTimeChange: (d: Date | null) => void;
+  handleScheduleSubmit: (name: string) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
 function mapToMenuItems(userList: string[]) {
@@ -131,6 +132,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
   handleWeekDaysChange,
   handleStartTimeChange,
   handleEndTimeChange,
+  handleScheduleSubmit,
 }: IProps) => {
   const classes = useStyles();
 
@@ -183,7 +185,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
           <CircularProgress className={classes.progressBar} />
         </Fade>
         <Grid className={classes.maingrid}>
-          <Grow in={boxesIn()}>
+          <Grow in={boxesIn()} /* TODO: MOVE TO ANOTHER TAB (new `feature`) */>
             <Box component='span' m={1} className={classes.leftbox}>
               <Card className={classes.card}>
                 <Grid item xs={10} md={11}>
@@ -295,6 +297,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
                     variant='contained'
                     color='primary'
                     disabled={isTimeWaiting && isFree()}
+                    onClick={handleScheduleSubmit(curUser)}
                   >
                     {'Assign'}
                   </Button>

@@ -86,7 +86,7 @@ export interface ISetSchedule {
   username: string;
   starttime: string;
   endtime: string;
-  workdays: number[];
+  workdays: string;
 }
 
 export interface ISchedule {

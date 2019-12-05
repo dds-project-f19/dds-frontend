@@ -211,6 +211,9 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
   render(): JSX.Element {
     const {
+      props: {
+        workspace,
+      },
       state: {
         curUser,
         userslist,
@@ -231,6 +234,8 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
 
     return (
       <ManagerForm
+        workspace={workspace}
+
         userslist={userslist}
         itemslist={itemslist}
         resText={resText}

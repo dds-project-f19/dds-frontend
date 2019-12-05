@@ -28,6 +28,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { IItemInfo, IWeekDays } from 'shared/types/models';
+import { workspacesInfo } from 'shared/workspaces';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -70,6 +71,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
+  workspace: string;
+
   userslist: string[];
   itemslist: IItemInfo[];
 
@@ -92,6 +95,10 @@ function mapToMenuItems(userList: string[]) {
   return userList.map(username => <MenuItem key={username} value={username}>{username}</MenuItem>);
 }
 
+function getItemTypeName(workspace: string, itemType: string) {
+  return workspacesInfo[workspace].types[itemType].description;
+}
+
 // TODO: import `freeText` from `ManagerFormContainer`.
 const freeText = 'Time slot is free';
 
@@ -106,6 +113,8 @@ const keyToLabel = {
 };
 
 const ManagerForm: React.FC<IProps> = ({
+  workspace,
+
   userslist,
   itemslist,
 
@@ -193,7 +202,7 @@ const ManagerForm: React.FC<IProps> = ({
                               key={itemtype}
                               className={classes.listitem}
                             >
-                              <ListItemText primary={itemtype} />
+                              <ListItemText primary={getItemTypeName(workspace, itemtype)} />
                               <ListItemSecondaryAction>
                                 <TextField
                                   id={itemtype}

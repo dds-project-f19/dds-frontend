@@ -65,7 +65,6 @@ const App: React.FC<IProps> = ({
             <AuthorizationPage
               onSuccess={getRedirectPath}
               authorizationApi={loginWorker}
-              registrationApi={async () => { }} // FIXME: remove sign up
             />
           </Route>
           <Route path={workspacePath}>

@@ -6,7 +6,6 @@ import { IRegisterFields } from 'shared/types/models';
 
 interface IProps {
   onRegisterAttempt: (regFields: IRegisterFields) => Promise<void>;
-  loginFormPath: string;
   onSuccess: () => string;
 }
 
@@ -77,7 +76,6 @@ export default class RegistrationFormContainer extends React.PureComponent<IProp
   render(): JSX.Element {
     const {
       props: {
-        loginFormPath,
         onSuccess,
       },
       state: {
@@ -99,7 +97,6 @@ export default class RegistrationFormContainer extends React.PureComponent<IProp
       <RegistrationForm
         formFields={formFields}
         isWaiting={isWaiting}
-        loginFormPath={loginFormPath}
         handleFieldChange={handleFieldChange}
         handleFormSubmit={handleFormSubmit}
       />

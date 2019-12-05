@@ -14,7 +14,6 @@ import { InputField } from 'features/InputField';
 interface IProps {
   formFields: Required<IRegisterFields>;
   isWaiting: boolean;
-  loginFormPath: string;
   handleFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
@@ -49,7 +48,6 @@ const RegistrationForm: React.FC<IProps> = ({
     address: addressValue,
   },
   isWaiting,
-  loginFormPath,
   handleFieldChange,
   handleFormSubmit,
 }: IProps) => {
@@ -135,18 +133,6 @@ const RegistrationForm: React.FC<IProps> = ({
           {'Sign Up'}
         </Button>
       </form>
-      <Grid container>
-        <Grid item xs>
-          <RouterLink to={loginFormPath}>
-            <MaterialLink
-              component='div'
-              variant='body2'
-            >
-              {'Sign in'}
-            </MaterialLink>
-          </RouterLink>
-        </Grid>
-      </Grid>
     </div>
   );
 };

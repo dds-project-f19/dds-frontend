@@ -6,7 +6,6 @@ import { ICredentials } from 'shared/types/models';
 
 interface IProps {
   onLoginAttempt: (credentials: ICredentials) => Promise<void>;
-  regFormPath: string;
   onSuccess: () => string;
 }
 
@@ -85,7 +84,6 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
   render(): JSX.Element {
     const {
       props: {
-        regFormPath,
         onSuccess,
       },
       state: {
@@ -107,7 +105,6 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
       <LoginForm
         formFields={formFields}
         isWaiting={isWaiting}
-        regFormPath={regFormPath}
         handleFieldChange={handleFieldChange}
         handleFormSubmit={handleFormSubmit}
       />

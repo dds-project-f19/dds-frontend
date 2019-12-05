@@ -10,7 +10,10 @@ import {
   IRegisterFields,
   IWorkerList,
   IManagerUsedItems,
-  IManagerRegisterFields
+  IManagerRegisterFields,
+  ISetSchedule,
+  ISchedule,
+  IOverlapCheckResponse,
 } from 'shared/types/models';
 import HttpActions from './HttpActions';
 
@@ -24,6 +27,8 @@ export default class Api {
 
   public ping: () => Promise<string>
     = async () => await this.actions.get('/ping');
+
+// ----------- Worker -----------
 
   public loginWorker: (data: ICredentials) => Promise<void> = async (data) => {
     const { token, claim } = await this.actions.post('/common/login', data) as ILoginResponse;
@@ -50,6 +55,9 @@ export default class Api {
   public getUsedItemsForWorker: () => Promise<IManagerUsedItems>
     = async () => await this.actions.get('/worker/list_taken_items');
 
+  public getSchedule: () => Promise<ISchedule>
+    = async () => await this.actions.get('/worker/get_schedule');
+
 // ----------- Manager -----------
 
   public registerWorkerByManager: (data: IRegisterFields) => Promise<void> = async (data) => {
@@ -65,8 +73,8 @@ export default class Api {
     await this.actions.delete(`/manager/remove_worker/${username}`);
   };
 
-  public addItem: (item: IItemInfo) => Promise<void> = async (item) => {
-    await this.actions.patch('/manager/add_available_items', item);
+  public setItem: (item: IItemInfo) => Promise<void> = async (item) => {
+    await this.actions.patch('/manager/set_available_items', item);
   };
 
   public removeItem: (item: IItemInfo) => Promise<void> = async (item) => {
@@ -78,6 +86,14 @@ export default class Api {
 
   public getTakenItemsForManager: () => Promise<IManagerUsedItems>
     = async () => await this.actions.get('/manager/list_taken_items');
+
+  public setWorkerSchedule: (setShedule: ISetSchedule) => Promise<IBasicResponse>
+    = async (setShedule) => await this.actions.post('/manager/set_worker_schedule', setShedule);
+
+  public checkTimeOverlap: (shedule: ISchedule) => Promise<boolean> = async (shedule) => {
+    const { overlap } = await this.actions.post('/manager/check_overlap', shedule) as IOverlapCheckResponse;
+    return overlap;
+  };
 
 // ----------- Admin -----------
 

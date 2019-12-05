@@ -1,10 +1,7 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import MaterialLink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
@@ -14,7 +11,6 @@ import { InputField } from 'features/InputField';
 interface IProps {
   formFields: Required<ICredentials>;
   isWaiting: boolean;
-  regFormPath: string;
   handleFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
@@ -45,7 +41,6 @@ const LoginForm: React.FC<IProps> = ({
     password: passwordValue,
   },
   isWaiting,
-  regFormPath,
   handleFieldChange,
   handleFormSubmit,
 }: IProps) => {
@@ -98,18 +93,6 @@ const LoginForm: React.FC<IProps> = ({
           {'Sign In'}
         </Button>
       </form>
-      <Grid container>
-        <Grid item xs>
-          <RouterLink to={regFormPath}>
-            <MaterialLink
-              component='div'
-              variant='body2'
-            >
-              {'Sign up'}
-            </MaterialLink>
-          </RouterLink>
-        </Grid>
-      </Grid>
     </div>
   );
 };

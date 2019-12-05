@@ -1,20 +1,19 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-import MaterialLink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import ListAltOutlined from '@material-ui/icons/ListAltOutlined';
 
 import { IRegisterFields } from 'shared/types/models';
 import { InputField } from 'features/InputField';
 
+export type SubmissionStatus = 'unknown' | 'succeed' | 'failed';
+
 interface IProps {
   formFields: Required<IRegisterFields>;
   isWaiting: boolean;
-  loginFormPath: string;
+  submissionStatus: SubmissionStatus;
   handleFieldChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
@@ -39,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RegistrationForm: React.FC<IProps> = ({
+const WorkerRegistrationForm: React.FC<IProps> = ({
   formFields: {
     username: usernameValue,
     password: passwordValue,
@@ -49,7 +48,7 @@ const RegistrationForm: React.FC<IProps> = ({
     address: addressValue,
   },
   isWaiting,
-  loginFormPath,
+  submissionStatus,
   handleFieldChange,
   handleFormSubmit,
 }: IProps) => {
@@ -66,7 +65,7 @@ const RegistrationForm: React.FC<IProps> = ({
         component='h1'
         variant='h5'
       >
-        {'Sign up'}
+        {'Worker sign up'}
       </Typography>
       <form
         className={classes.form}
@@ -135,20 +134,8 @@ const RegistrationForm: React.FC<IProps> = ({
           {'Sign Up'}
         </Button>
       </form>
-      <Grid container>
-        <Grid item xs>
-          <RouterLink to={loginFormPath}>
-            <MaterialLink
-              component='div'
-              variant='body2'
-            >
-              {'Sign in'}
-            </MaterialLink>
-          </RouterLink>
-        </Grid>
-      </Grid>
     </div>
   );
 };
 
-export default RegistrationForm;
+export default WorkerRegistrationForm;

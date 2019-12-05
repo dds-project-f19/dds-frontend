@@ -6,8 +6,7 @@ import { ICredentials } from 'shared/types/models';
 
 interface IProps {
   onLoginAttempt: (credentials: ICredentials) => Promise<void>;
-  regFormPath: string;
-  onSuccessRedirectPath: string;
+  onSuccess: () => string;
 }
 
 interface IState {
@@ -85,8 +84,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
   render(): JSX.Element {
     const {
       props: {
-        regFormPath,
-        onSuccessRedirectPath,
+        onSuccess,
       },
       state: {
         formFields,
@@ -99,7 +97,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
 
     if (toRedirect) {
       return (
-        <Redirect to={onSuccessRedirectPath} />
+        <Redirect to={onSuccess()} />
       );
     }
 
@@ -107,7 +105,6 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
       <LoginForm
         formFields={formFields}
         isWaiting={isWaiting}
-        regFormPath={regFormPath}
         handleFieldChange={handleFieldChange}
         handleFormSubmit={handleFormSubmit}
       />

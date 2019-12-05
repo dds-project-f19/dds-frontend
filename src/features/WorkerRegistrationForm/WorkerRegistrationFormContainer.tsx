@@ -1,25 +1,28 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
 
-import RegistrationForm from './RegistrationForm';
+import WorkerRegistrationForm, { SubmissionStatus } from './WorkerRegistrationForm';
 import { IRegisterFields } from 'shared/types/models';
 
 interface IProps {
   onRegisterAttempt: (regFields: IRegisterFields) => Promise<void>;
-  loginFormPath: string;
-  onSuccessRedirectPath: string;
 }
 
 interface IState {
   formFields: Required<IRegisterFields>;
   isWaiting: boolean;
-  toRedirect: boolean;
+  status: SubmissionStatus;
 }
 
-export default class RegistrationFormContainer extends React.PureComponent<IProps, IState> {
-  public static defaultProps = {
-    onRegisterAttempt: async () => { },
-  };
+export default class WorkerRegistrationFormContainer extends React.PureComponent<IProps, IState> {
+  private _isMounted: boolean = false;
+
+  componentDidMount() {
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   public state: IState = {
     formFields: {
@@ -31,7 +34,7 @@ export default class RegistrationFormContainer extends React.PureComponent<IProp
       address: '',
     },
     isWaiting: false,
-    toRedirect: false,
+    status: 'unknown',
   };
 
   private handleFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,45 +64,39 @@ export default class RegistrationFormContainer extends React.PureComponent<IProp
       },
     } = this;
 
+    let succeed = false;
+
     this.setState({ isWaiting: true });
 
     try {
       await onRegisterAttempt(formFields);
-      this.setState({ toRedirect: true });
-    } catch (e) {
+      succeed = true;
+    } catch (e) { }
+
+    if (this._isMounted) {
       this.setState({
         isWaiting: false,
-        /* TODO: error message */
+        status: succeed ? 'succeed' : 'failed',
       });
     }
   }
 
   render(): JSX.Element {
     const {
-      props: {
-        loginFormPath,
-        onSuccessRedirectPath,
-      },
       state: {
         formFields,
         isWaiting,
-        toRedirect,
+        status,
       },
       handleFieldChange,
       handleFormSubmit,
     } = this;
 
-    if (toRedirect) {
-      return (
-        <Redirect to={onSuccessRedirectPath} />
-      );
-    }
-
     return (
-      <RegistrationForm
+      <WorkerRegistrationForm
         formFields={formFields}
         isWaiting={isWaiting}
-        loginFormPath={loginFormPath}
+        submissionStatus={status}
         handleFieldChange={handleFieldChange}
         handleFormSubmit={handleFormSubmit}
       />

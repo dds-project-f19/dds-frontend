@@ -3,11 +3,17 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
+import { Api } from 'services/api';
+import {
+  authPath,
+  workspacePath,
+  managerPagePath,
+} from 'shared/constants';
 import { AuthorizationPage } from 'modules/AuthorizationPage';
 import { WorkspacePage } from 'modules/WorkspacePage';
-import { Api } from 'services/api';
+import { ManagerPage } from 'modules/ManagerPage';
 
-makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => ({
   '@global': {
     body: {
       backgroundColor: theme.palette.common.white,
@@ -15,66 +21,82 @@ makeStyles((theme) => ({
   },
 }));
 
-interface IProps { }
-
-interface IState {
-  api: Api;
+interface IProps {
+  isAuthenticated: boolean;
+  getRedirectPath: () => string;
+  loginWorker: Api['loginWorker'];
+  takeItem: Api['takeItem'];
+  returnItem: Api['returnItem'];
+  getAvailableItemsForWorker: Api['getAvailableItemsForWorker'];
+  getUsedItemsForWorker: Api['getUsedItemsForWorker'];
+  registerWorkerByManager: Api['registerWorkerByManager'];
+  listWorkers: Api['listWorkers'];
+  setItem: Api['setItem'];
+  getAvailableItemsForManager: Api['getAvailableItemsForManager'];
+  setWorkerSchedule: Api['setWorkerSchedule'];
+  checkTimeOverlap: Api['checkTimeOverlap'];
 }
 
-export default class App extends React.PureComponent<IProps, IState> {
-  public state: IState = {
-    api: new Api(),
-  };
+const App: React.FC<IProps> = ({
+  isAuthenticated,
+  getRedirectPath,
+  loginWorker,
+  takeItem,
+  returnItem,
+  getAvailableItemsForWorker,
+  getUsedItemsForWorker,
+  registerWorkerByManager,
+  listWorkers,
+  setItem,
+  getAvailableItemsForManager,
+  setWorkerSchedule,
+  checkTimeOverlap,
+}: IProps) => {
+  /* const classes = */ useStyles();
 
-  private isAuthenticated(): boolean {
-    return this.state.api.role !== 'unknown';
-  }
-
-  public render(): JSX.Element {
-    const {
-      loginWorker,
-      takeItem,
-      returnItem,
-      getAvailableItemsForWorker,
-      getUsedItemsForWorker,
-    } = this.state.api;
-
-    const authPath = '/auth';
-    const workspacePath = '/workspace';
-
-    return (
-      <BrowserRouter>
-        <React.Fragment>
-          <CssBaseline />
+  return (
+    <BrowserRouter>
+      <React.Fragment>
+        <CssBaseline />
+        {
+          !isAuthenticated &&
+          <Redirect to={getRedirectPath()} />
+        }
+        <Switch>
+          <Route path={authPath}>
+            <AuthorizationPage
+              onSuccess={getRedirectPath}
+              authorizationApi={loginWorker}
+            />
+          </Route>
+          <Route path={workspacePath}>
+            <WorkspacePage
+              availableItemsApi={getAvailableItemsForWorker}
+              usedItemsApi={getUsedItemsForWorker}
+              takeItemApi={takeItem}
+              returnItemApi={returnItem}
+            />
+          </Route>
+          <Route path={managerPagePath}>
+            <ManagerPage
+              registerWorkerApi={registerWorkerByManager}
+              listWorkersApi={listWorkers}
+              setItemApi={setItem}
+              listAvailableItemsApi={getAvailableItemsForManager}
+              setWorkerScheduleApi={setWorkerSchedule}
+              checkOverlapApi={checkTimeOverlap}
+            />
+          </Route>
           {
-            !this.isAuthenticated() &&
-            <Redirect to={authPath} />
+            isAuthenticated &&
+            <Route path='/'>
+              <Redirect to={workspacePath} />
+            </Route>
           }
-          <Switch>
-            <Route path={authPath}>
-              <AuthorizationPage
-                onSuccessRedirectPath={workspacePath}
-                authorizationApi={loginWorker}
-                registrationApi={async () => { }} // FIXME: remove sign up
-              />
-            </Route>
-            <Route path={workspacePath}>
-              <WorkspacePage
-                availableItemsApi={getAvailableItemsForWorker}
-                usedItemsApi={getUsedItemsForWorker}
-                takeItemApi={takeItem}
-                returnItemApi={returnItem}
-              />
-            </Route>
-            {
-              this.isAuthenticated() &&
-              <Route path='/'>
-                <Redirect to={workspacePath} />
-              </Route>
-            }
-          </Switch>
-        </React.Fragment>
-      </BrowserRouter>
-    );
-  }
-}
+        </Switch>
+      </React.Fragment>
+    </BrowserRouter>
+  );
+};
+
+export default App;

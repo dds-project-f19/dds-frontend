@@ -29,9 +29,10 @@ interface IProps {
   returnItem: Api['returnItem'];
   getAvailableItemsForWorker: Api['getAvailableItemsForWorker'];
   getUsedItemsForWorker: Api['getUsedItemsForWorker'];
+  registerWorkerByManager: Api['registerWorkerByManager'];
   listWorkers: Api['listWorkers'];
-  getAvailableItemsForManager: Api['getAvailableItemsForManager'];
   setItem: Api['setItem'];
+  getAvailableItemsForManager: Api['getAvailableItemsForManager'];
   setWorkerSchedule: Api['setWorkerSchedule'];
   checkTimeOverlap: Api['checkTimeOverlap'];
 }
@@ -44,9 +45,10 @@ const App: React.FC<IProps> = ({
   returnItem,
   getAvailableItemsForWorker,
   getUsedItemsForWorker,
+  registerWorkerByManager,
   listWorkers,
-  getAvailableItemsForManager,
   setItem,
+  getAvailableItemsForManager,
   setWorkerSchedule,
   checkTimeOverlap,
 }: IProps) => {
@@ -77,9 +79,10 @@ const App: React.FC<IProps> = ({
           </Route>
           <Route path={managerPagePath}>
             <ManagerPage
+              registerWorkerApi={registerWorkerByManager}
               listWorkersApi={listWorkers}
-              listAvailableItemsApi={getAvailableItemsForManager}
               setItemApi={setItem}
+              listAvailableItemsApi={getAvailableItemsForManager}
               setWorkerScheduleApi={setWorkerSchedule}
               checkOverlapApi={checkTimeOverlap}
             />

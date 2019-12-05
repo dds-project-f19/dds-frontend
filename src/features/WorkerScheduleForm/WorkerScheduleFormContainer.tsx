@@ -1,5 +1,5 @@
 import React from 'react';
-import ManagerForm from './ManagerForm';
+import WorkerScheduleForm from './WorkerScheduleForm';
 import update from 'react-addons-update';
 
 import {
@@ -37,7 +37,7 @@ interface IState {
 const freeText = 'Time slot is free';
 const occupiedText = 'This time slot is already occupied!';
 
-export default class ManagerFormContainer extends React.PureComponent<IProps, IState> {
+export default class WorkerScheduleFormContainer extends React.PureComponent<IProps, IState> {
   private _isMounted: boolean = false; // TODO: Cansellable promises
 
   public state: IState = {
@@ -233,7 +233,7 @@ export default class ManagerFormContainer extends React.PureComponent<IProps, IS
     } = this;
 
     return (
-      <ManagerForm
+      <WorkerScheduleForm
         workspace={workspace}
 
         userslist={userslist}

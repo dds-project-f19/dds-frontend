@@ -112,7 +112,7 @@ const keyToLabel = {
   sun: 'Sunday',
 };
 
-const ManagerForm: React.FC<IProps> = ({
+const WorkerScheduleForm: React.FC<IProps> = ({
   workspace,
 
   userslist,
@@ -159,9 +159,6 @@ const ManagerForm: React.FC<IProps> = ({
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <div>
-        <Typography variant='h4' className={classes.title}>
-          {'Manager Page'}
-        </Typography>
         <FormControl variant='outlined' className={classes.formControl}>
           <InputLabel ref={inputLabel} id='user-select-label'>
             {'User'}
@@ -320,4 +317,4 @@ const ManagerForm: React.FC<IProps> = ({
   );
 };
 
-export default ManagerForm;
+export default WorkerScheduleForm;

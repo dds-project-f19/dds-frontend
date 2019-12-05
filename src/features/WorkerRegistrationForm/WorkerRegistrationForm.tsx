@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ManagerRegistrationForm: React.FC<IProps> = ({
+const WorkerRegistrationForm: React.FC<IProps> = ({
   formFields: {
     username: usernameValue,
     password: passwordValue,
@@ -65,7 +65,7 @@ const ManagerRegistrationForm: React.FC<IProps> = ({
         component='h1'
         variant='h5'
       >
-        {'Sign up'}
+        {'Worker sign up'}
       </Typography>
       <form
         className={classes.form}
@@ -138,4 +138,4 @@ const ManagerRegistrationForm: React.FC<IProps> = ({
   );
 };
 
-export default ManagerRegistrationForm;
+export default WorkerRegistrationForm;

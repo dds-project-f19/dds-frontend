@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ManagerRegistrationForm, { SubmissionStatus } from './ManagerRegistrationForm';
+import WorkerRegistrationForm, { SubmissionStatus } from './WorkerRegistrationForm';
 import { IRegisterFields } from 'shared/types/models';
 
 interface IProps {
@@ -13,7 +13,7 @@ interface IState {
   status: SubmissionStatus;
 }
 
-export default class ManagerRegistrationFormContainer extends React.PureComponent<IProps, IState> {
+export default class WorkerRegistrationFormContainer extends React.PureComponent<IProps, IState> {
   private _isMounted: boolean = false;
 
   componentDidMount() {
@@ -93,7 +93,7 @@ export default class ManagerRegistrationFormContainer extends React.PureComponen
     } = this;
 
     return (
-      <ManagerRegistrationForm
+      <WorkerRegistrationForm
         formFields={formFields}
         isWaiting={isWaiting}
         submissionStatus={status}

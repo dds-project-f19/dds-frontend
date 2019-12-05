@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { Api } from 'services/api';
 import { WorkerScheduleForm } from 'features/WorkerScheduleForm';
-import { ManagerRegistrationForm } from 'features/ManagerRegistrationForm';
+import { WorkerRegistrationForm } from 'features/WorkerRegistrationForm';
 
 interface IProps {
   registerWorkerApi: Api['registerWorkerByManager'];
@@ -76,7 +76,7 @@ const ManagerPage: React.FC<IProps> = ({
             'UNDER CONSTRUCTION!'
           ),
           (
-            <ManagerRegistrationForm
+            <WorkerRegistrationForm
               onRegisterAttempt={registerWorkerApi}
             />
           ),

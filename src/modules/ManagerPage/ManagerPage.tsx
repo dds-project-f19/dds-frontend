@@ -7,6 +7,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
 import { Api } from 'services/api';
+import { WorkspaceItemsForm } from 'features/WorkspaceItemsForm';
 import { WorkerScheduleForm } from 'features/WorkerScheduleForm';
 import { WorkerRegistrationForm } from 'features/WorkerRegistrationForm';
 
@@ -73,7 +74,11 @@ const ManagerPage: React.FC<IProps> = ({
       >
         {[
           (
-            'UNDER CONSTRUCTION!'
+            <WorkspaceItemsForm
+              workspace='garage' // TODO: retrieve workspace info
+              listAvailableItemsApi={listAvailableItemsApi}
+              setItemApi={setItemApi}
+            />
           ),
           (
             <WorkerRegistrationForm
@@ -82,10 +87,7 @@ const ManagerPage: React.FC<IProps> = ({
           ),
           (
             <WorkerScheduleForm
-              workspace='garage' // TODO: retrieve workspace info
               listWorkersApi={listWorkersApi}
-              listAvailableItemsApi={listAvailableItemsApi}
-              setItemApi={setItemApi}
               setWorkerScheduleApi={setWorkerScheduleApi}
               checkOverlapApi={checkOverlapApi}
             />

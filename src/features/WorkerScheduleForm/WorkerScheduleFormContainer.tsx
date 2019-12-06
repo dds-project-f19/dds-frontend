@@ -108,9 +108,10 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     }
 
   private getCurTimeForRequest: (state: IState) => ISchedule = (state) => {
-    const { startDate, endDate, weekdays } = state;
+    const { curUser, startDate, endDate, weekdays } = state;
 
     return {
+      username: curUser,
       starttime: WorkerScheduleFormContainer.dateToStr(startDate),
       endtime: WorkerScheduleFormContainer.dateToStr(endDate),
       workdays: WorkerScheduleFormContainer.workdaysToStr(weekdays),

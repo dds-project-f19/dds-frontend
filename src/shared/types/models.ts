@@ -87,6 +87,7 @@ export interface ISetSchedule {
 }
 
 export interface ISchedule {
+  username?: string;
   starttime: string;
   endtime: string;
   workdays: string;

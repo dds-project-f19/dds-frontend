@@ -99,7 +99,7 @@ const App: React.FC<IProps> = ({
           {
             isAuthenticated &&
             <Route path='/'>
-              <Redirect to={workspacePath} />
+              <Redirect to={getRedirectPath()} />
             </Route>
           }
         </Switch>

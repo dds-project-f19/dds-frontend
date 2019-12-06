@@ -2,6 +2,7 @@ import React from 'react';
 
 import App from './App';
 import { Api } from 'services/api';
+import { CookieParser } from 'services/cookie';
 import {
   workspacePath,
   managerPagePath,
@@ -21,10 +22,10 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
   };
 
   private isAuthenticated: () => boolean
-    = () => this.state.api.role !== 'unknown';
+    = () => CookieParser.getRole() !== 'unknown';
 
-  private getRedirectPath = () => {
-    switch (this.state.api.role) {
+  private getRedirectPath: () => string = () => {
+    switch (CookieParser.getRole()) {
       case 'worker': {
         return workspacePath;
       }
@@ -39,7 +40,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
       }
     }
     throw new Error('No resolution for given role exists!');
-  }
+  };
 
   public render(): JSX.Element {
     const {

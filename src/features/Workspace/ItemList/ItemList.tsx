@@ -12,7 +12,6 @@ import { IClientAvailableItems } from '../WorkspaceContainer';
 import { WorkerItem } from 'features/WorkerItem';
 
 interface IProps {
-  workspace: string;
   droppableId: string;
   items: IClientAvailableItems;
 }
@@ -33,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ItemList: React.FC<IProps> = ({
-  workspace,
   droppableId,
   items,
 }: IProps) => {
@@ -102,7 +100,6 @@ const ItemList: React.FC<IProps> = ({
                           >
                             <WorkerItem
                               isDragging={isDragging}
-                              workspace={workspace}
                               itemType={items[itemId]}
                             />
                           </div>

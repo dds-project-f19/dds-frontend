@@ -21,7 +21,6 @@ interface ILoadingFailedProps {
 
 interface ILoadedProps {
   loadingStatus?: 'Done';
-  workspace: string;
   availableItems: IClientAvailableItems;
   usedItems: IClientUsedItems;
   onDragEnd: DragDropContextProps['onDragEnd'];
@@ -60,7 +59,6 @@ const Workspace: React.FC<IProps> = (props: IProps) => {
     case 'Done':
     case undefined: {
       const {
-        workspace,
         availableItems,
         usedItems,
         onDragEnd,
@@ -68,10 +66,10 @@ const Workspace: React.FC<IProps> = (props: IProps) => {
 
       return (
         <DragDropContext
-          //onBeforeCapture
-          //onBeforeDragStart
-          //onDragStart
-          //onDragUpdate
+        //onBeforeCapture
+        //onBeforeDragStart
+        //onDragStart
+        //onDragUpdate
           onDragEnd={onDragEnd}
         //liftInstruction
         //nonce
@@ -82,12 +80,10 @@ const Workspace: React.FC<IProps> = (props: IProps) => {
             className={classes.WorkspaceBox}
           >
             <ItemList
-              workspace={workspace}
               droppableId={itemListDroppableId}
               items={availableItems}
             />
             <WorkspaceWindow
-              workspace={workspace}
               items={usedItems}
             />
           </Box>

@@ -7,10 +7,7 @@ export interface ICredentials {
   password: string;
 }
 
-export interface ILoginResponse {
-  token: string;
-  claim: 'worker'|'manager'|'admin'|'unknown';
-}
+export type Role = 'worker' | 'manager' | 'admin' | 'unknown';
 
 export interface IWorkerInfo {
   username: string;

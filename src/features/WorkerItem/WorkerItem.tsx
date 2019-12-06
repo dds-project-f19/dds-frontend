@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 
+import { CookieParser } from 'services/cookie';
 import { workspacesInfo } from 'shared/workspaces';
 
 interface IPlaceholderProps {
@@ -11,7 +12,6 @@ interface IPlaceholderProps {
 
 interface ICompleteProps {
   placeholder?: false;
-  workspace: string;
   itemType: string;
   isDragging: boolean;
 }
@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WorkerItem: React.FC<IProps> = (props: IProps) => {
+  const { types } = workspacesInfo[CookieParser.getWorkspace()];
   const classes = useStyles();
 
   return (
@@ -48,10 +49,9 @@ const WorkerItem: React.FC<IProps> = (props: IProps) => {
       ) : (
           (() => {
             const {
-              workspace,
               itemType,
             } = props;
-            const { description, pic } = workspacesInfo[workspace].types[itemType];
+            const { description, pic } = types[itemType];
 
             return (
               <React.Fragment>

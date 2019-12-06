@@ -33,9 +33,6 @@ const useStyles = makeStyles((theme) => ({
     'margin-left': 'auto',
     'margin-right': 'auto',
   },
-  progressBar: {
-    margin: theme.spacing(1),
-  },
   maingrid: {
     display: 'flex',
     flexDirection: 'column',
@@ -67,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: green[700],
     },
   },
-  buttonProgress: {
+  progressBar: {
     color: green[500],
     position: 'absolute',
     top: '50%',
@@ -170,7 +167,6 @@ const WorkerScheduleForm: React.FC<IProps> = ({
         >
           <CircularProgress className={classes.progressBar} />
         </Fade>
-
         <Grow in={boxesIn()} {...(boxesIn() ? { timeout: 1000 } : {})}>
           <Box component='span' m={1} className={classes.box}>
             <Card className={classes.card}>
@@ -238,7 +234,7 @@ const WorkerScheduleForm: React.FC<IProps> = ({
                   >
                     {isOccupied ? "Occupied" : "Assign"}
                   </Button>
-                  {isTimeLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                  {isTimeLoading && <CircularProgress size={24} className={classes.progressBar} />}
                 </div>
               </Grid>
             </Card>

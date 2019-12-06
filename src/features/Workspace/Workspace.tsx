@@ -15,6 +15,10 @@ interface ILoadingProps {
   loadingStatus: 'In Progress';
 }
 
+interface IWrongTimeslotProps {
+  loadingStatus: 'Wrong timeslot';
+}
+
 interface ILoadingFailedProps {
   loadingStatus: 'Failed';
 }
@@ -26,7 +30,7 @@ interface ILoadedProps {
   onDragEnd: DragDropContextProps['onDragEnd'];
 }
 
-type IProps = ILoadingProps | ILoadingFailedProps | ILoadedProps;
+type IProps = ILoadingProps | IWrongTimeslotProps | ILoadingFailedProps | ILoadedProps;
 
 const useStyles = makeStyles((theme) => ({
   WorkspaceBox: {
@@ -44,6 +48,14 @@ const Workspace: React.FC<IProps> = (props: IProps) => {
       return ( // TODO
         <div>
           {'Workspace is loading...'}
+        </div>
+      );
+    }
+
+    case 'Wrong timeslot': {
+      return ( // TODO
+        <div>
+          {'Now is not your time slot. Come again later!'}
         </div>
       );
     }
@@ -66,10 +78,10 @@ const Workspace: React.FC<IProps> = (props: IProps) => {
 
       return (
         <DragDropContext
-        //onBeforeCapture
-        //onBeforeDragStart
-        //onDragStart
-        //onDragUpdate
+          //onBeforeCapture
+          //onBeforeDragStart
+          //onDragStart
+          //onDragUpdate
           onDragEnd={onDragEnd}
         //liftInstruction
         //nonce

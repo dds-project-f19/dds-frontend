@@ -14,6 +14,7 @@ import {
 interface IProps {
   availableItemsApi: () => Promise<IAvailableItems>;
   usedItemsApi: () => Promise<IUsedItems>;
+  checkCurrentlyAvailable: () => Promise<boolean>;
   takeItemApi: (item: ITakeItemInfo) => Promise<IBasicResponse>;
   returnItemApi: (item: IReturnItemInfo) => Promise<IBasicResponse>;
 }
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
 const WorkspacePage: React.FC<IProps> = ({
   availableItemsApi,
   usedItemsApi,
+  checkCurrentlyAvailable,
   takeItemApi,
   returnItemApi,
 }: IProps) => {
@@ -44,6 +46,7 @@ const WorkspacePage: React.FC<IProps> = ({
       <Workspace
         availableItemsApi={availableItemsApi}
         usedItemsApi={usedItemsApi}
+        checkCurrentlyAvailable={checkCurrentlyAvailable}
         takeItemApi={takeItemApi}
         returnItemApi={returnItemApi}
       />

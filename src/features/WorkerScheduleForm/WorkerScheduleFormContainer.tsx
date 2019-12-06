@@ -23,12 +23,11 @@ interface IState {
   startDate: Date;
   endDate: Date;
   isUserWaiting: boolean;
-  isTimeWaiting: boolean;
+  isOccupied: boolean;
+  isTimeLoading: boolean;
+  isButtonSuccess: boolean;
   resText: string;
 }
-
-const freeText = 'Time slot is free';
-const occupiedText = 'This time slot is already occupied!';
 
 const defaultTime = {
   weekdays: {
@@ -42,6 +41,7 @@ const defaultTime = {
   },
   startDate: new Date(),
   endDate: new Date(),
+  isOccupied: false,
 }
 
 export default class WorkerScheduleFormContainer extends React.PureComponent<IProps, IState> {
@@ -60,7 +60,9 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     },
     startDate: new Date(),
     isUserWaiting: false,
-    isTimeWaiting: false,
+    isOccupied: false,
+    isTimeLoading: false,
+    isButtonSuccess: false,
     endDate: new Date(),
     resText: '',
   };
@@ -76,9 +78,9 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     this._isMounted = false;
   }
 
-  private static getTime: (date: Date) => string
+  private static dateToStr: (date: Date) => string
     = (date) => `${date.getUTCHours()}:${date.getUTCMinutes()}`;
-  
+
   private static strToDate: (date: string) => Date
     = (strDate) => {
       const hd = strDate.split(':').map(Number);
@@ -88,18 +90,18 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       return date;
     }
 
-  private static getWorkdays: (checkList: IWeekDays) => string
+  private static workdaysToStr: (checkList: IWeekDays) => string
     = (checkList) => Object.values(checkList).reduce(
       (out, val, index) => val ? out.concat(index + 1) : out, // FIXME: UTC week day
       []
     ).join();
-  
+
   private static strToWorkdays: (workdays: string) => IWeekDays
     = (workdays) => {
       var res: IWeekDays = { ...defaultTime.weekdays };
 
       workdays.split(',').map(Number).forEach(weekday => {
-        const resInd: keyof IWeekDays = Object.keys(res)[weekday] as keyof IWeekDays;
+        const resInd: keyof IWeekDays = Object.keys(res)[weekday - 1] as keyof IWeekDays;
         res[resInd] = true;
       });
       return res
@@ -109,9 +111,9 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     const { startDate, endDate, weekdays } = state;
 
     return {
-      starttime: WorkerScheduleFormContainer.getTime(startDate),
-      endtime: WorkerScheduleFormContainer.getTime(endDate),
-      workdays: WorkerScheduleFormContainer.getWorkdays(weekdays),
+      starttime: WorkerScheduleFormContainer.dateToStr(startDate),
+      endtime: WorkerScheduleFormContainer.dateToStr(endDate),
+      workdays: WorkerScheduleFormContainer.workdaysToStr(weekdays),
     };
   };
 
@@ -126,12 +128,13 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
   };
 
   private handleUserChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    if (this.state.isTimeLoading) return;
     const newCurUser = event.target.value as string
 
     this.setState({
       curUser: newCurUser,
-      isUserWaiting: false,
-      isTimeWaiting: true,
+      isUserWaiting: true,
+      isButtonSuccess: false,
       resText: '',
     });
 
@@ -152,18 +155,21 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       weekdays = WorkerScheduleFormContainer.strToWorkdays(workdays);
     } catch (e) { }
 
-    this.setState({
-      isTimeWaiting: false,
-      startDate: startDate,
-      endDate: endDate,
-      weekdays: weekdays,
-    })
+    if (this._isMounted) {
+      this.setState({
+        isUserWaiting: false,
+        startDate: startDate,
+        endDate: endDate,
+        weekdays: weekdays,
+      });
+    };
 
     this.getTimeSlotStatus({ ...this.state, weekdays: weekdays }); // TODO: handle better
   };
 
 
   private handleWeekDaysChange = (name: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (this.state.isTimeLoading) return;
     const { weekdays } = this.state;
 
     const newWeekdays = { ...weekdays, [name]: event.target.checked };
@@ -174,6 +180,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
   };
 
   private handleStartTimeChange = async (time: Date | null) => {
+    if (this.state.isTimeLoading) return;
     if (time === null) {
       throw new Error('Date is null');
     }
@@ -193,6 +200,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
   };
 
   private handleEndTimeChange = async (time: Date | null) => {
+    if (this.state.isTimeLoading) return;
     if (time === null) {
       throw new Error('Date is null');
     }
@@ -210,16 +218,18 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     if (!this._isMounted) return;
 
     this.setState({
-      isTimeWaiting: true,
+      isTimeLoading: true,
+      isButtonSuccess: false,
       resText: '',
     });
 
     const isOccupied = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));
+    console.log(isOccupied);
 
     if (this._isMounted) {
       this.setState({
-        isTimeWaiting: false,
-        resText: isOccupied ? occupiedText : freeText,
+        isTimeLoading: false,
+        isOccupied: isOccupied,
       });
     }
   };
@@ -234,6 +244,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
   };
 
   private handleScheduleSubmit: (name: string) => (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void = (name) => (event) => {
+    if (this.state.isTimeLoading) return;
     event.preventDefault();
 
     const {
@@ -247,12 +258,22 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
       },
     } = this;
 
+    this.setState({
+      isTimeLoading: true,
+      isButtonSuccess: false,
+    })
+
     setWorkerScheduleApi({
       username: name,
-      starttime: WorkerScheduleFormContainer.getTime(startDate),
-      endtime: WorkerScheduleFormContainer.getTime(endDate),
-      workdays: WorkerScheduleFormContainer.getWorkdays(weekdays),
+      starttime: WorkerScheduleFormContainer.dateToStr(startDate),
+      endtime: WorkerScheduleFormContainer.dateToStr(endDate),
+      workdays: WorkerScheduleFormContainer.workdaysToStr(weekdays),
     });
+
+    this.setState({
+      isTimeLoading: false,
+      isButtonSuccess: true,
+    })
   };
 
   render(): JSX.Element {
@@ -263,9 +284,10 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
         weekdays,
         startDate,
         endDate,
-        isTimeWaiting,
         isUserWaiting,
-        resText,
+        isOccupied,
+        isTimeLoading,
+        isButtonSuccess,
       },
       handleUserChange,
       handleWeekDaysChange,
@@ -277,9 +299,11 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     return (
       <WorkerScheduleForm
         usersList={usersList}
-        resText={resText}
+
         isUserWaiting={isUserWaiting}
-        isTimeWaiting={isTimeWaiting}
+        isOccupied={isOccupied}
+        isTimeLoading={isTimeLoading}
+        isButtonSuccess={isButtonSuccess}
         curUser={curUser}
         weekdays={weekdays}
         startDate={startDate}

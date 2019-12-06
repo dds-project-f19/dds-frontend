@@ -81,14 +81,10 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
   private static dateToStr: (date: Date) => string
     = (date) => `${date.getUTCHours()}:${date.getUTCMinutes()}`;
 
-  private static strToDate: (date: string) => Date
-    = (strDate) => {
-      const hd = strDate.split(':').map(Number);
-      const date: Date = new Date();
-      date.setHours(hd[0])
-      date.setMinutes(hd[1])
-      return date;
-    }
+  private static strToDate: (date: string) => Date = (date) => {
+    const [hours, minutes] = date.split(':').map(Number);
+    return new Date(Date.UTC(1970, 1, 1, hours, minutes));
+  };
 
   private static workdaysToStr: (checkList: IWeekDays) => string
     = (checkList) => Object.values(checkList).reduce(

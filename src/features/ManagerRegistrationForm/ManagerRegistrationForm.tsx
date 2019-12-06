@@ -116,7 +116,7 @@ const ManagerRegistrationForm: React.FC<IProps> = ({
             ref={inputLabel}
             id='demo-simple-select-outlined-label'
           >
-            {'Game type'}
+            {'Workspace'}
           </InputLabel>
           <Select
             labelId='demo-simple-select-outlined-label'
@@ -127,7 +127,12 @@ const ManagerRegistrationForm: React.FC<IProps> = ({
             labelWidth={labelWidth}
           >
             {Object.keys(workspacesInfo).map((workspaceName) => (
-              <MenuItem value={workspaceName}>{workspaceName}</MenuItem>
+              <MenuItem
+                key={workspaceName}
+                value={workspaceName}
+              >
+                {workspaceName}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>

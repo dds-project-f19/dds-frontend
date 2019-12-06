@@ -11,6 +11,7 @@ import {
 
 interface IProps {
   listWorkersApi: () => Promise<IWorkerList>;
+  getWorkerScheduleApi: (username: string) => Promise<ISchedule>;
   setWorkerScheduleApi: (setShedule: ISetSchedule) => Promise<IBasicResponse>;
   checkOverlapApi: (shedule: ISchedule) => Promise<boolean>;
 }
@@ -29,7 +30,22 @@ interface IState {
 const freeText = 'Time slot is free';
 const occupiedText = 'This time slot is already occupied!';
 
+const defaultTime = {
+  weekdays: {
+    mon: false,
+    tue: false,
+    wed: false,
+    thu: false,
+    fri: false,
+    sat: false,
+    sun: false,
+  },
+  startDate: new Date(),
+  endDate: new Date(),
+}
+
 export default class WorkerScheduleFormContainer extends React.PureComponent<IProps, IState> {
+
   public state: IState = {
     curUser: '',
     usersList: [],
@@ -62,12 +78,32 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
 
   private static getTime: (date: Date) => string
     = (date) => `${date.getUTCHours()}:${date.getUTCMinutes()}`;
+  
+  private static strToDate: (date: string) => Date
+    = (strDate) => {
+      const hd = strDate.split(':').map(Number);
+      const date: Date = new Date();
+      date.setHours(hd[0])
+      date.setMinutes(hd[1])
+      return date;
+    }
 
   private static getWorkdays: (checkList: IWeekDays) => string
     = (checkList) => Object.values(checkList).reduce(
       (out, val, index) => val ? out.concat(index + 1) : out, // FIXME: UTC week day
       []
     ).join();
+  
+  private static strToWorkdays: (workdays: string) => IWeekDays
+    = (workdays) => {
+      var res: IWeekDays = { ...defaultTime.weekdays };
+
+      workdays.split(',').map(Number).forEach(weekday => {
+        const resInd: keyof IWeekDays = Object.keys(res)[weekday] as keyof IWeekDays;
+        res[resInd] = true;
+      });
+      return res
+    }
 
   private getCurTimeForRequest: (state: IState) => ISchedule = (state) => {
     const { startDate, endDate, weekdays } = state;
@@ -90,12 +126,40 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
   };
 
   private handleUserChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    const newCurUser = event.target.value as string
 
     this.setState({
-      curUser: event.target.value as string,
+      curUser: newCurUser,
       isUserWaiting: false,
+      isTimeWaiting: true,
       resText: '',
     });
+
+    let {
+      startDate,
+      endDate,
+      weekdays,
+    } = defaultTime;
+
+    try {
+      const {
+        starttime,
+        endtime,
+        workdays,
+      } = await this.props.getWorkerScheduleApi(newCurUser);
+      startDate = WorkerScheduleFormContainer.strToDate(starttime);
+      endDate = WorkerScheduleFormContainer.strToDate(endtime);
+      weekdays = WorkerScheduleFormContainer.strToWorkdays(workdays);
+    } catch (e) { }
+
+    this.setState({
+      isTimeWaiting: false,
+      startDate: startDate,
+      endDate: endDate,
+      weekdays: weekdays,
+    })
+
+    this.getTimeSlotStatus({ ...this.state, weekdays: weekdays }); // TODO: handle better
   };
 
 

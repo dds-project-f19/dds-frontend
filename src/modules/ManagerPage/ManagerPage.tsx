@@ -16,6 +16,7 @@ interface IProps {
   listWorkersApi: Api['listWorkers'];
   setItemApi: Api['setItem'];
   listAvailableItemsApi: Api['getAvailableItemsForManager'];
+  getWorkerScheduleApi: Api['getWorkerSchedule'];
   setWorkerScheduleApi: Api['setWorkerSchedule'];
   checkOverlapApi: Api['checkTimeOverlap'];
 }
@@ -39,6 +40,7 @@ const ManagerPage: React.FC<IProps> = ({
   listWorkersApi,
   listAvailableItemsApi,
   setItemApi,
+  getWorkerScheduleApi,
   setWorkerScheduleApi,
   checkOverlapApi,
 }: IProps) => {
@@ -87,6 +89,7 @@ const ManagerPage: React.FC<IProps> = ({
           (
             <WorkerScheduleForm
               listWorkersApi={listWorkersApi}
+              getWorkerScheduleApi={getWorkerScheduleApi}
               setWorkerScheduleApi={setWorkerScheduleApi}
               checkOverlapApi={checkOverlapApi}
             />

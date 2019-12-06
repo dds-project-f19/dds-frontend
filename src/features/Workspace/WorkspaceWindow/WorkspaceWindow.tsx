@@ -8,12 +8,12 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 
+import { CookieParser } from 'services/cookie';
 import { IClientUsedItems } from '../WorkspaceContainer';
 import { WorkerItem } from 'features/WorkerItem';
 import { workspacesInfo } from 'shared/workspaces';
 
 interface IProps {
-  workspace: string;
   items: IClientUsedItems;
 }
 
@@ -26,11 +26,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const WorkspaceWindow: React.FC<IProps> = ({
-  workspace,
   items,
 }: IProps) => {
+  const { slots } = workspacesInfo[CookieParser.getWorkspace()];
   const classes = useStyles();
-  const { slots } = workspacesInfo[workspace];
 
   return (
     <React.Fragment>
@@ -58,7 +57,6 @@ const WorkspaceWindow: React.FC<IProps> = ({
                     >
                       <WorkerItem
                         isDragging={isDragging}
-                        workspace={workspace}
                         itemType={items[emplacedItemId as string].itemtype}
                       />
                     </div>
@@ -97,6 +95,6 @@ const WorkspaceWindow: React.FC<IProps> = ({
       })}
     </React.Fragment>
   );
-}
+};
 
 export default WorkspaceWindow;

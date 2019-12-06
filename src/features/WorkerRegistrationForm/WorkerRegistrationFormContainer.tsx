@@ -50,7 +50,7 @@ export default class WorkerRegistrationFormContainer extends React.PureComponent
         [name]: value,
       },
     });
-  }
+  };
 
   private handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,7 +79,7 @@ export default class WorkerRegistrationFormContainer extends React.PureComponent
         status: succeed ? 'succeed' : 'failed',
       });
     }
-  }
+  };
 
   render(): JSX.Element {
     const {

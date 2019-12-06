@@ -26,10 +26,6 @@ export interface IProps {
   handleFormSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
-function getWorkspaces(): string[] {
-  return Object.keys(workspacesInfo);
-}
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -130,7 +126,7 @@ const ManagerRegistrationForm: React.FC<IProps> = ({
             onChange={handleFieldChange}
             labelWidth={labelWidth}
           >
-            {getWorkspaces().map((workspaceName) => (
+            {Object.keys(workspacesInfo).map((workspaceName) => (
               <MenuItem value={workspaceName}>{workspaceName}</MenuItem>
             ))}
           </Select>

@@ -1,7 +1,6 @@
 import {
   IBasicResponse,
   ICredentials,
-  ILoginResponse,
   IWorkerInfo,
   ITakeItemInfo,
   IReturnItemInfo,
@@ -19,7 +18,6 @@ import HttpActions from './HttpActions';
 
 export default class Api {
   private actions: HttpActions;
-  public role: ILoginResponse['claim'] = 'unknown';
 
   constructor() {
     this.actions = new HttpActions('/api');
@@ -30,11 +28,8 @@ export default class Api {
 
 // ----------- Worker -----------
 
-  public loginWorker: (data: ICredentials) => Promise<void> = async (data) => {
-    const { token, claim } = await this.actions.post('/common/login', data) as ILoginResponse;
-    this.role = claim;
-    this.actions.addHeader('Authorization', token);
-  };
+  public loginWorker: (data: ICredentials) => Promise<void>
+    = async (data) => await this.actions.post('/common/login', data);
 
   public getWorkerInfo: () => Promise<IWorkerInfo>
     = async () => await this.actions.get('/worker/get');
@@ -60,11 +55,8 @@ export default class Api {
 
 // ----------- Manager -----------
 
-  public registerWorkerByManager: (data: IRegisterFields) => Promise<void> = async (data) => {
-    // This token is useless since we're logged in as a manager
-    // eslint-disable-next-line
-    const { token } = await this.actions.post('/manager/register_worker', data) as ILoginResponse;
-  };
+  public registerWorkerByManager: (data: IRegisterFields) => Promise<void>
+    = async (data) => await this.actions.post('/manager/register_worker', data);
 
   public listWorkers: () => Promise<IWorkerList>
     = async () => await this.actions.get('/manager/list_workers');
@@ -97,7 +89,6 @@ export default class Api {
 
 // ----------- Admin -----------
 
-  public registerManager: (data: IManagerRegisterFields) => Promise<void> = async (data) => {
-    await this.actions.post('/admin/register_manager', data);
-  };
+  public registerManager: (data: IManagerRegisterFields) => Promise<void>
+    = async (data) => await this.actions.post('/admin/register_manager', data);
 }

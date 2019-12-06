@@ -14,6 +14,7 @@ import Grow from '@material-ui/core/Grow';
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { CookieParser } from 'services/cookie';
 import { IItemInfo } from 'shared/types/models';
 import { workspacesInfo } from 'shared/workspaces';
 
@@ -45,8 +46,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  workspace: string;
-
   itemsList: IItemInfo[];
   isItemsWaiting: boolean;
 
@@ -54,82 +53,81 @@ interface IProps {
   handleItemsUpdateSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }
 
-function getItemTypeName(workspace: string, itemType: string) {
-  return workspacesInfo[workspace].types[itemType].description;
-}
-
 const WorkspaceItemsForm: React.FC<IProps> = ({
-  workspace,
   itemsList,
   isItemsWaiting,
 
   handleFieldChange,
   handleItemsUpdateSubmit,
 }: IProps) => {
+  const { types } = workspacesInfo[CookieParser.getWorkspace()];
   const classes = useStyles();
 
   return (
     <Grid className={classes.maingrid}>
-    <Box component='span' m={1} className={classes.box}>
-      <Card className={classes.card}>
-        <Grid item xs={10} md={11}>
-          <Typography variant='h6' className={classes.title}>
-            {'Available items'}
-          </Typography>
-          { !isItemsWaiting &&
-          <Grow in={!isItemsWaiting}>
-            <Box>
-              <List>
-                {itemsList.map(({ itemtype, count }) =>
-                  React.cloneElement(
-                    (
-                      <ListItem
-                        key={itemtype}
-                        className={classes.listitem}
+      <Box component='span' m={1} className={classes.box}>
+        <Card className={classes.card}>
+          <Grid item xs={10} md={11}>
+            <Typography variant='h6' className={classes.title}>
+              {'Available items'}
+            </Typography>
+            {
+              isItemsWaiting ? (
+                <Fade
+                  in={isItemsWaiting}
+                  style={{
+                    transitionDelay: isItemsWaiting ? '800ms' : '0ms'
+                  }}
+                  unmountOnExit
+                >
+                  <CircularProgress className={classes.progressBar} />
+                </Fade>
+              ) : (
+                  <Grow in={!isItemsWaiting}>
+                    <Box>
+                      <List>
+                        {itemsList.map(({ itemtype, count }) =>
+                          React.cloneElement(
+                            (
+                              <ListItem
+                                key={itemtype}
+                                className={classes.listitem}
+                              >
+                                <ListItemText primary={types[itemtype].description} />
+                                <ListItemSecondaryAction>
+                                  <TextField
+                                    id={itemtype}
+                                    label='Amount'
+                                    type='number'
+                                    variant='outlined'
+                                    value={count}
+                                    // disabled={itemsDisabled()}
+                                    onChange={handleFieldChange}
+                                  />
+                                </ListItemSecondaryAction>
+                              </ListItem>
+                            ) as React.ReactElement,
+                            {
+                              key: itemtype
+                            }
+                          )
+                        )}
+                      </List>
+                      <Button
+                        variant='contained'
+                        color='primary'
+                        // disabled={isUserWaiting}
+                        onClick={handleItemsUpdateSubmit}
                       >
-                        <ListItemText primary={getItemTypeName(workspace, itemtype)} />
-                        <ListItemSecondaryAction>
-                          <TextField
-                            id={itemtype}
-                            label='Amount'
-                            type='number'
-                            variant='outlined'
-                            value={count}
-                            // disabled={itemsDisabled()}
-                            onChange={handleFieldChange}
-                          />
-                        </ListItemSecondaryAction>
-                      </ListItem>
-                    ) as React.ReactElement,
-                    {
-                      key: itemtype
-                    }
-                  )
-                )}
-              </List>
-              <Button
-                variant='contained'
-                color='primary'
-                // disabled={isUserWaiting}
-                onClick={handleItemsUpdateSubmit}
-              >
-                {'Save'}
-              </Button>
-            </Box>
-          </Grow> }
-          { isItemsWaiting &&
-          <Fade
-              in={isItemsWaiting}
-              style={{
-                transitionDelay: isItemsWaiting ? '800ms' : '0ms'
-              }}
-              unmountOnExit
-            >
-              <CircularProgress className={classes.progressBar} />
-            </Fade> }
-        </Grid>
-      </Card>
-    </Box>
+                        {'Save'}
+                      </Button>
+                    </Box>
+                  </Grow>
+                )
+            }
+          </Grid>
+        </Card>
+      </Box>
     </Grid>
   );
 };

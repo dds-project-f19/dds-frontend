@@ -274,9 +274,8 @@ export default class WorkspaceContainer extends React.PureComponent<IProps, ISta
       );
     }
 
-    return ( // TODO: find out the workspace
+    return (
       <Workspace
-        workspace='garage'
         availableItems={availableItems}
         usedItems={usedItems}
         onDragEnd={this.onDragEnd}

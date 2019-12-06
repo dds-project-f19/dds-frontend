@@ -51,7 +51,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
         [name]: value,
       },
     });
-  }
+  };
 
   private handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,7 +79,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
         isWaiting: false,
       });
     }
-  }
+  };
 
   render(): JSX.Element {
     const {

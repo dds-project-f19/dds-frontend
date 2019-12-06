@@ -75,7 +75,6 @@ const ManagerPage: React.FC<IProps> = ({
         {[
           (
             <WorkspaceItemsForm
-              workspace='garage' // TODO: retrieve workspace info
               listAvailableItemsApi={listAvailableItemsApi}
               setItemApi={setItemApi}
             />

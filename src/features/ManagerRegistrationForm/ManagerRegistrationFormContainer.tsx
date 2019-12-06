@@ -69,7 +69,6 @@ export default class ManagerRegistrationFormContainer extends React.PureComponen
         formFields,
       },
     } = this;
-    console.log(formFields);
 
     let succeed = false;
 

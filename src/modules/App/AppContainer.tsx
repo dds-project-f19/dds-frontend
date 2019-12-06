@@ -3,9 +3,10 @@ import React from 'react';
 import App from './App';
 import { Api } from 'services/api';
 import {
-  authPath,
   workspacePath,
   managerPagePath,
+  adminPagePath,
+  authPath,
 } from 'shared/constants';
 
 interface IProps { }
@@ -24,19 +25,20 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
 
   private getRedirectPath = () => {
     switch (this.state.api.role) {
-      case 'unknown': {
-        return authPath;
+      case 'worker': {
+        return workspacePath;
       }
       case 'manager': {
         return managerPagePath;
       }
-      case 'worker': {
-        return workspacePath;
+      case 'admin': {
+        return adminPagePath;
       }
-      default: {
-        throw new Error('No resolution for given role exists!');
+      case 'unknown': {
+        return authPath;
       }
     }
+    throw new Error('No resolution for given role exists!');
   }
 
   public render(): JSX.Element {
@@ -54,6 +56,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
           getAvailableItemsForManager,
           setWorkerSchedule,
           checkTimeOverlap,
+          registerManager,
         },
       },
       isAuthenticated,
@@ -75,6 +78,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
         getAvailableItemsForManager={getAvailableItemsForManager}
         setWorkerSchedule={setWorkerSchedule}
         checkTimeOverlap={checkTimeOverlap}
+        registerManager={registerManager}
       />
     );
   }

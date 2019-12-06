@@ -225,7 +225,6 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     });
 
     const isOccupied = await this.props.checkOverlapApi(this.getCurTimeForRequest(state));
-    console.log(isOccupied);
 
     if (this._isMounted) {
       this.setState({

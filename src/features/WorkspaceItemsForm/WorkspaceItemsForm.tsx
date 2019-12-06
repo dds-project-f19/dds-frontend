@@ -1,4 +1,5 @@
 import React from 'react';
+import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,6 +14,7 @@ import Card from '@material-ui/core/Card';
 import Grow from '@material-ui/core/Grow';
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { green } from '@material-ui/core/colors';
 
 import { CookieParser } from 'services/cookie';
 import { IItemInfo } from 'shared/types/models';
@@ -40,6 +42,24 @@ const useStyles = makeStyles((theme) => ({
   listitem: {
     margin: 20,
   },
+  wrapper: {
+    margin: theme.spacing(1),
+    position: 'relative',
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    '&:hover': {
+      backgroundColor: green[700],
+    },
+  },
+  buttonProgress: {
+    color: green[500],
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
   title: {
     margin: 10,
   },
@@ -48,6 +68,8 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   itemsList: IItemInfo[];
   isItemsWaiting: boolean;
+  buttonLoading: boolean;
+  buttonSuccess: boolean;
 
   handleFieldChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleItemsUpdateSubmit: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -56,12 +78,18 @@ interface IProps {
 const WorkspaceItemsForm: React.FC<IProps> = ({
   itemsList,
   isItemsWaiting,
+  buttonLoading,
+  buttonSuccess,
 
   handleFieldChange,
   handleItemsUpdateSubmit,
 }: IProps) => {
   const { types } = workspacesInfo[CookieParser.getWorkspace()];
   const classes = useStyles();
+
+  const buttonClassname = clsx({
+    [classes.buttonSuccess]: buttonSuccess,
+  });
 
   return (
     <Grid className={classes.maingrid}>
@@ -113,14 +141,18 @@ const WorkspaceItemsForm: React.FC<IProps> = ({
                           )
                         )}
                       </List>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        // disabled={isUserWaiting}
-                        onClick={handleItemsUpdateSubmit}
-                      >
-                        {'Save'}
-                      </Button>
+                      <div className={classes.wrapper}>
+                        <Button
+                          variant='contained'
+                          color='primary'
+                          className={buttonClassname}
+                          disabled={buttonLoading}
+                          onClick={handleItemsUpdateSubmit}
+                        >
+                          Save
+                    </Button>
+                        {buttonLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                      </div>
                     </Box>
                   </Grow>
                 )

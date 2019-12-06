@@ -55,6 +55,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
           listWorkers,
           setItem,
           getAvailableItemsForManager,
+          getWorkerSchedule,
           setWorkerSchedule,
           checkTimeOverlap,
           registerManager,
@@ -77,6 +78,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
         listWorkers={listWorkers}
         setItem={setItem}
         getAvailableItemsForManager={getAvailableItemsForManager}
+        getWorkerSchedule={getWorkerSchedule}
         setWorkerSchedule={setWorkerSchedule}
         checkTimeOverlap={checkTimeOverlap}
         registerManager={registerManager}

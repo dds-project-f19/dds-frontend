@@ -81,6 +81,9 @@ export default class Api {
 
   public setWorkerSchedule: (setShedule: ISetSchedule) => Promise<IBasicResponse>
     = async (setShedule) => await this.actions.post('/manager/set_worker_schedule', setShedule);
+  
+  public getWorkerSchedule: (username: string) => Promise<ISchedule>
+    = async (username) => await this.actions.get(`/manager/get_worker_schedule/${username}`);
 
   public checkTimeOverlap: (shedule: ISchedule) => Promise<boolean> = async (shedule) => {
     const { overlap } = await this.actions.post('/manager/check_overlap', shedule) as IOverlapCheckResponse;

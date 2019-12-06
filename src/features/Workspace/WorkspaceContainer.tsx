@@ -15,6 +15,7 @@ import {
 interface IProps {
   availableItemsApi: () => Promise<IAvailableItems>;
   usedItemsApi: () => Promise<IUsedItems>;
+  checkCurrentlyAvailable: () => Promise<boolean>;
   takeItemApi: (item: ITakeItemInfo) => Promise<IBasicResponse>;
   returnItemApi: (item: IReturnItemInfo) => Promise<IBasicResponse>;
 }
@@ -42,6 +43,7 @@ interface IState {
   requestItemsError?: any;
   data: IData;
   relocationCandidate: IRelocationCandidate | null;
+  isWrongTimeslot: boolean;
 }
 
 export const itemListDroppableId = 'item_list';
@@ -54,6 +56,7 @@ export default class WorkspaceContainer extends React.PureComponent<IProps, ISta
       usedItems: undefined,
     },
     relocationCandidate: null,
+    isWrongTimeslot: false,
   };
   // https://reactjs.org/blog/2015/12/16/ismounted-antipattern.html
   // TODO: cancellable promises
@@ -106,9 +109,19 @@ export default class WorkspaceContainer extends React.PureComponent<IProps, ISta
     const {
       availableItemsApi,
       usedItemsApi,
+      checkCurrentlyAvailable,
     } = this.props;
 
     let availableItems, usedItems;
+
+    if (!await checkCurrentlyAvailable()) {
+      if (this._isMounted) {
+        this.setState({
+          isWrongTimeslot: true,
+        })
+      }
+      return;
+    }
 
     try {
       ([availableItems, usedItems] = await Promise.all([availableItemsApi(), usedItemsApi()]));
@@ -259,10 +272,17 @@ export default class WorkspaceContainer extends React.PureComponent<IProps, ISta
           availableItems,
           usedItems,
         },
+        isWrongTimeslot,
       },
     } = this;
 
-    if (requestItemsError !== undefined) {
+    if (isWrongTimeslot) {
+      return (
+        <Workspace loadingStatus='Wrong timeslot' />
+      );
+    }
+
+    else if (requestItemsError !== undefined) {
       return (
         <Workspace loadingStatus='Failed' />
       );

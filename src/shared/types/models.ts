@@ -40,6 +40,10 @@ export interface IUsedItem {
   assignedtoslot: string;
 }
 
+export interface ICheckAvailableResult {
+  available: boolean;
+}
+
 export interface IManagerUsedItem extends IUsedItem {
   takenby: string;
 }

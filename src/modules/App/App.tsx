@@ -31,6 +31,7 @@ interface IProps {
   returnItem: Api['returnItem'];
   getAvailableItemsForWorker: Api['getAvailableItemsForWorker'];
   getUsedItemsForWorker: Api['getUsedItemsForWorker'];
+  checkCurrentlyAvailable: Api['checkCurrentlyAvailable'];
   registerWorkerByManager: Api['registerWorkerByManager'];
   listWorkers: Api['listWorkers'];
   setItem: Api['setItem'];
@@ -49,6 +50,7 @@ const App: React.FC<IProps> = ({
   returnItem,
   getAvailableItemsForWorker,
   getUsedItemsForWorker,
+  checkCurrentlyAvailable,
   registerWorkerByManager,
   listWorkers,
   setItem,
@@ -73,6 +75,7 @@ const App: React.FC<IProps> = ({
             <WorkspacePage
               availableItemsApi={getAvailableItemsForWorker}
               usedItemsApi={getUsedItemsForWorker}
+              checkCurrentlyAvailable={checkCurrentlyAvailable}
               takeItemApi={takeItem}
               returnItemApi={returnItem}
             />

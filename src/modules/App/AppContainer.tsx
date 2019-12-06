@@ -51,6 +51,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
           returnItem,
           getAvailableItemsForWorker,
           getUsedItemsForWorker,
+          checkCurrentlyAvailable,
           registerWorkerByManager,
           listWorkers,
           setItem,
@@ -74,6 +75,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
         returnItem={returnItem}
         getAvailableItemsForWorker={getAvailableItemsForWorker}
         getUsedItemsForWorker={getUsedItemsForWorker}
+        checkCurrentlyAvailable={checkCurrentlyAvailable}
         registerWorkerByManager={registerWorkerByManager}
         listWorkers={listWorkers}
         setItem={setItem}

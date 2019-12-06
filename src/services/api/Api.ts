@@ -6,6 +6,7 @@ import {
   IReturnItemInfo,
   IItemInfo,
   IAvailableItems,
+  ICheckAvailableResult,
   IRegisterFields,
   IWorkerList,
   IManagerUsedItems,
@@ -53,6 +54,11 @@ export default class Api {
   public getSchedule: () => Promise<ISchedule>
     = async () => await this.actions.get('/worker/get_schedule');
 
+  public checkCurrentlyAvailable: () => Promise<boolean> = async () => {
+    const { available } = await this.actions.get('/worker/check_currently_available') as ICheckAvailableResult;
+    return available;
+  };
+
 // ----------- Manager -----------
 
   public registerWorkerByManager: (data: IRegisterFields) => Promise<void>
@@ -81,7 +87,7 @@ export default class Api {
 
   public setWorkerSchedule: (setShedule: ISetSchedule) => Promise<IBasicResponse>
     = async (setShedule) => await this.actions.post('/manager/set_worker_schedule', setShedule);
-  
+
   public getWorkerSchedule: (username: string) => Promise<ISchedule>
     = async (username) => await this.actions.get(`/manager/get_worker_schedule/${username}`);
 

@@ -7,6 +7,10 @@ export interface ICredentials {
   password: string;
 }
 
+export interface IGetLinkResult {
+  link: string;
+}
+
 export type Role = 'worker' | 'manager' | 'admin' | 'unknown';
 
 export interface IWorkerInfo {

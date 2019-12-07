@@ -27,6 +27,7 @@ interface IProps {
   isAuthenticated: boolean;
   getRedirectPath: () => string;
   login: Api['login'];
+  getTelegramLink: Api['getTelegramLink'];
   takeItem: Api['takeItem'];
   returnItem: Api['returnItem'];
   getAvailableItemsForWorker: Api['getAvailableItemsForWorker'];
@@ -47,6 +48,7 @@ const App: React.FC<IProps> = ({
   isAuthenticated,
   getRedirectPath,
   login,
+  getTelegramLink,
   takeItem,
   returnItem,
   getAvailableItemsForWorker,
@@ -75,6 +77,7 @@ const App: React.FC<IProps> = ({
         <Switch>
           <Route path={workspacePath}>
             <WorkspacePage
+              getTelegramLinkApi={getTelegramLink}
               availableItemsApi={getAvailableItemsForWorker}
               usedItemsApi={getUsedItemsForWorker}
               checkCurrentlyAvailableApi={checkCurrentlyAvailable}

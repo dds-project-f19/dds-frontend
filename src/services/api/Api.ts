@@ -1,6 +1,7 @@
 import {
   IBasicResponse,
   ICredentials,
+  IGetLinkResult,
   IWorkerInfo,
   ITakeItemInfo,
   IReturnItemInfo,
@@ -31,6 +32,11 @@ export default class Api {
 
   public login: (data: ICredentials) => Promise<void>
     = async (data) => await this.actions.post('/common/login', data);
+
+  public getTelegramLink: () => Promise<string> = async () => {
+    const { link } = await this.actions.get('/common/telegram_join_link') as IGetLinkResult;
+    return link;
+  };
 
   public logOut: () => Promise<void>
     = async () => await this.actions.post('/common/logout');

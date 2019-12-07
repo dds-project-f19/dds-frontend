@@ -54,6 +54,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
       state: {
         api: {
           login,
+          getTelegramLink,
           takeItem,
           returnItem,
           getAvailableItemsForWorker,
@@ -79,6 +80,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
         isAuthenticated={isAuthenticated()}
         getRedirectPath={getRedirectPath}
         login={login}
+        getTelegramLink={getTelegramLink}
         takeItem={takeItem}
         returnItem={returnItem}
         getAvailableItemsForWorker={getAvailableItemsForWorker}

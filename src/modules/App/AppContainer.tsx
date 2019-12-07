@@ -44,7 +44,6 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
 
   private logOut: () => void = () => {
     this.state.api.logOut();
-    document.cookie = 'dds-auth-claim='; // TODO: remove
     // TODO: more elegant way to force component update?
     window.location.reload(false);
   };

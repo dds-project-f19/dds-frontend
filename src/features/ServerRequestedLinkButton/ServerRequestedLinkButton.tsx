@@ -14,6 +14,10 @@ const ServerRequestedLinkButton: React.FC<IProps> = ({
     <Button
       href={link}
       disabled={link === undefined}
+      variant='contained'
+      component='a'
+      target='_blank'
+      rel='noopener noreferrer'
     >
       {label}
     </Button>

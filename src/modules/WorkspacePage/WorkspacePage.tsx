@@ -1,9 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
 
+import { ServerRequestedLinkButton } from 'features/ServerRequestedLinkButton';
 import { PageHeader } from 'features/PageHeader';
 import { Workspace } from 'features/Workspace';
 import {
@@ -52,14 +52,6 @@ const WorkspacePage: React.FC<IProps> = ({
     setTabIndex(newTabIndex);
   };
 
-  const [telegramLink, setTelegramLink] = React.useState();
-
-  (async () => {
-    if (!telegramLink) {
-      setTelegramLink(await getTelegramLinkApi())
-    }
-  })();
-
   const classes = useStyles();
 
   return (
@@ -92,11 +84,10 @@ const WorkspacePage: React.FC<IProps> = ({
             />
           ),
           (
-            <Button
-              href={telegramLink}
-            >
-              {'Join Telegram bot'}
-            </Button>
+            <ServerRequestedLinkButton
+              getLinkApi={getTelegramLinkApi}
+              label={'Join Telegram bot'}
+            />
           ),
         ][tabIndex]}
       </Container>

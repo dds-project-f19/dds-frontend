@@ -15,7 +15,7 @@ import {
 interface IProps {
   availableItemsApi: () => Promise<IAvailableItems>;
   usedItemsApi: () => Promise<IUsedItems>;
-  checkCurrentlyAvailable: () => Promise<boolean>;
+  checkCurrentlyAvailableApi: () => Promise<boolean>;
   takeItemApi: (item: ITakeItemInfo) => Promise<IBasicResponse>;
   returnItemApi: (item: IReturnItemInfo) => Promise<IBasicResponse>;
 }
@@ -109,12 +109,12 @@ export default class WorkspaceContainer extends React.PureComponent<IProps, ISta
     const {
       availableItemsApi,
       usedItemsApi,
-      checkCurrentlyAvailable,
+      checkCurrentlyAvailableApi,
     } = this.props;
 
     let availableItems, usedItems;
 
-    if (!await checkCurrentlyAvailable()) {
+    if (!await checkCurrentlyAvailableApi()) {
       if (this._isMounted) {
         this.setState({
           isWrongTimeslot: true,

@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   isAuthenticated: boolean;
   getRedirectPath: () => string;
-  loginWorker: Api['loginWorker'];
+  login: Api['login'];
   takeItem: Api['takeItem'];
   returnItem: Api['returnItem'];
   getAvailableItemsForWorker: Api['getAvailableItemsForWorker'];
@@ -40,12 +40,13 @@ interface IProps {
   setWorkerSchedule: Api['setWorkerSchedule'];
   checkTimeOverlap: Api['checkTimeOverlap'];
   registerManager: Api['registerManager'];
+  onLogOut: () => void;
 }
 
 const App: React.FC<IProps> = ({
   isAuthenticated,
   getRedirectPath,
-  loginWorker,
+  login,
   takeItem,
   returnItem,
   getAvailableItemsForWorker,
@@ -59,6 +60,7 @@ const App: React.FC<IProps> = ({
   setWorkerSchedule,
   checkTimeOverlap,
   registerManager,
+  onLogOut,
 }: IProps) => {
   /* const classes = */ useStyles();
 
@@ -75,9 +77,10 @@ const App: React.FC<IProps> = ({
             <WorkspacePage
               availableItemsApi={getAvailableItemsForWorker}
               usedItemsApi={getUsedItemsForWorker}
-              checkCurrentlyAvailable={checkCurrentlyAvailable}
+              checkCurrentlyAvailableApi={checkCurrentlyAvailable}
               takeItemApi={takeItem}
               returnItemApi={returnItem}
+              onLogOut={onLogOut}
             />
           </Route>
           <Route path={managerPagePath}>
@@ -89,17 +92,19 @@ const App: React.FC<IProps> = ({
               getWorkerScheduleApi={getWorkerSchedule}
               setWorkerScheduleApi={setWorkerSchedule}
               checkOverlapApi={checkTimeOverlap}
+              onLogOut={onLogOut}
             />
           </Route>
           <Route path={adminPagePath}>
             <AdminPage
               registerManagerApi={registerManager}
+              onLogOut={onLogOut}
             />
           </Route>
           <Route path={authPath}>
             <AuthorizationPage
               onSuccess={getRedirectPath}
-              authorizationApi={loginWorker}
+              authorizationApi={login}
             />
           </Route>
           {

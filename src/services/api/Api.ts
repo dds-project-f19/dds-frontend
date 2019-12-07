@@ -27,10 +27,15 @@ export default class Api {
   public ping: () => Promise<string>
     = async () => await this.actions.get('/ping');
 
-// ----------- Worker -----------
+// ----------- Common -----------
 
-  public loginWorker: (data: ICredentials) => Promise<void>
+  public login: (data: ICredentials) => Promise<void>
     = async (data) => await this.actions.post('/common/login', data);
+
+  public logOut: () => Promise<void>
+    = async () => await this.actions.post('/common/logout');
+
+// ----------- Worker -----------
 
   public getWorkerInfo: () => Promise<IWorkerInfo>
     = async () => await this.actions.get('/worker/get');

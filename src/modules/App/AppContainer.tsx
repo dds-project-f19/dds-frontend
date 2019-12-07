@@ -42,11 +42,18 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
     throw new Error('No resolution for given role exists!');
   };
 
+  private logOut: () => void = () => {
+    (async () => {
+      await this.state.api.logOut();
+      this.forceUpdate();
+    })();
+  };
+
   public render(): JSX.Element {
     const {
       state: {
         api: {
-          loginWorker,
+          login,
           takeItem,
           returnItem,
           getAvailableItemsForWorker,
@@ -64,13 +71,14 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
       },
       isAuthenticated,
       getRedirectPath,
+      logOut,
     } = this;
 
     return (
       <App
         isAuthenticated={isAuthenticated()}
         getRedirectPath={getRedirectPath}
-        loginWorker={loginWorker}
+        login={login}
         takeItem={takeItem}
         returnItem={returnItem}
         getAvailableItemsForWorker={getAvailableItemsForWorker}
@@ -84,6 +92,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
         setWorkerSchedule={setWorkerSchedule}
         checkTimeOverlap={checkTimeOverlap}
         registerManager={registerManager}
+        onLogOut={logOut}
       />
     );
   }

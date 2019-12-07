@@ -49,7 +49,7 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
     })();
   };
 
-  public render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       state: {
         api: {

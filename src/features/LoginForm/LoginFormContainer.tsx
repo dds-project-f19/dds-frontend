@@ -81,7 +81,7 @@ export default class LoginFormContainer extends React.PureComponent<IProps, ISta
     }
   };
 
-  render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       props: {
         onSuccess,

@@ -87,7 +87,7 @@ export default class ManagerRegistrationFormContainer extends React.PureComponen
     }
   };
 
-  render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       state: {
         formFields,

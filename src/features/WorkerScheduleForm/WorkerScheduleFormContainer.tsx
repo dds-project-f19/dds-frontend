@@ -272,7 +272,7 @@ export default class WorkerScheduleFormContainer extends React.PureComponent<IPr
     })
   };
 
-  render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       state: {
         curUser,

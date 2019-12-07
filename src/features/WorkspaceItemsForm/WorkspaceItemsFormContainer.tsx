@@ -15,19 +15,19 @@ interface IProps {
 }
 
 interface IState {
-    itemsList: IItemInfo[];
-    isItemsWaiting: boolean;
-    buttonLoading: boolean;
-    buttonSuccess: boolean;
+  itemsList: IItemInfo[];
+  isItemsWaiting: boolean;
+  buttonLoading: boolean;
+  buttonSuccess: boolean;
 }
 
 export default class WorkspaceItemsFormContainer extends React.PureComponent<IProps, IState> {
-    public state: IState = {
-        itemsList: [],
-        isItemsWaiting: false,
-        buttonLoading: false,
-        buttonSuccess: false,
-    };
+  public state: IState = {
+    itemsList: [],
+    isItemsWaiting: false,
+    buttonLoading: false,
+    buttonSuccess: false,
+  };
 
   private _isMounted: boolean = false; // TODO: Cansellable promises
 
@@ -40,12 +40,12 @@ export default class WorkspaceItemsFormContainer extends React.PureComponent<IPr
     this._isMounted = false;
   }
 
-    private handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (this.state.buttonLoading) return;
+  private handleFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (this.state.buttonLoading) return;
 
-        const { itemsList } = this.state;
-        const { id, value } = event.target;
-        const numValue: number = parseInt(value);
+    const { itemsList } = this.state;
+    const { id, value } = event.target;
+    const numValue: number = parseInt(value);
 
     if (numValue < 0) return;
 
@@ -89,28 +89,28 @@ export default class WorkspaceItemsFormContainer extends React.PureComponent<IPr
     event.preventDefault();
 
     const {
-        props: {
-            setItemApi,
-        },
-        state: {
-            itemsList,
-        },
+      props: {
+        setItemApi,
+      },
+      state: {
+        itemsList,
+      },
     } = this;
 
     this.setState({
-        buttonLoading: true,
-        buttonSuccess: false,
+      buttonLoading: true,
+      buttonSuccess: false,
     })
 
     itemsList.forEach((itemInfo) => setItemApi(itemInfo));
 
     this.setState({
-        buttonLoading: false,
-        buttonSuccess: true,
+      buttonLoading: false,
+      buttonSuccess: true,
     })
-};
+  };
 
-  render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       state: {
         itemsList,

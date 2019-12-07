@@ -264,7 +264,7 @@ export default class WorkspaceContainer extends React.PureComponent<IProps, ISta
     this.requestRelocation(relocationCandidate);
   };
 
-  render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       state: {
         requestItemsError,

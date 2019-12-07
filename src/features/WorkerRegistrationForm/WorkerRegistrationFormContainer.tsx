@@ -81,7 +81,7 @@ export default class WorkerRegistrationFormContainer extends React.PureComponent
     }
   };
 
-  render(): JSX.Element {
+  render(): React.ReactNode {
     const {
       state: {
         formFields,

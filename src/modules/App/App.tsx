@@ -72,7 +72,7 @@ const App: React.FC<IProps> = ({
         <CssBaseline />
         {
           !isAuthenticated &&
-          <Redirect to={getRedirectPath()} />
+          <Redirect to={'/'} />
         }
         <Switch>
           <Route path={workspacePath}>
@@ -110,12 +110,9 @@ const App: React.FC<IProps> = ({
               authorizationApi={login}
             />
           </Route>
-          {
-            isAuthenticated &&
-            <Route path='/'>
-              <Redirect to={getRedirectPath()} />
-            </Route>
-          }
+          <Route path='/'>
+            <Redirect to={isAuthenticated ? getRedirectPath() : authPath} />
+          </Route>
         </Switch>
       </React.Fragment>
     </BrowserRouter>

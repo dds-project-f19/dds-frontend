@@ -16,9 +16,15 @@ export default class HttpActions {
     const { headers } = this;
 
     if (headers.has(header)) {
-      headers.delete(header);
+      this.removeHeader(header);
     }
     headers.append(header, value);
+  }
+
+  public removeHeader(header: string) {
+    const { headers } = this;
+
+    headers.delete(header);
   }
 
   private async request<T>(urlSuffix: string, init: RequestInit): Promise<T> {
@@ -28,7 +34,7 @@ export default class HttpActions {
     });
 
     if (!response.ok) {
-      throw new Error(response.statusText);
+      throw response.status;
     }
 
     return response.json() as Promise<T>;

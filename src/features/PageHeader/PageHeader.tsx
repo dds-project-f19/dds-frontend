@@ -23,7 +23,9 @@ const useStyles = makeStyles((theme) => ({
   pageTitle: {
     margin: theme.spacing(1),
   },
-  logOutButton: {},
+  logOutButton: {
+    marginLeft: theme.spacing(2),
+  },
 }));
 
 const PageHeader: React.FC<IProps> = ({
@@ -51,6 +53,7 @@ const PageHeader: React.FC<IProps> = ({
       </Tabs>
       <Button
         onClick={onLogOut}
+        variant='contained'
         className={classes.logOutButton}
       >
         {'Log out'}

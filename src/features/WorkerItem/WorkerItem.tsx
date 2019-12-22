@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import Gavel from '@material-ui/icons/Gavel';
 
 import { CookieParser } from 'services/cookie';
 import { workspacesInfo } from 'shared/workspaces';
@@ -19,7 +20,7 @@ interface ICompleteProps {
 type IProps = IPlaceholderProps | ICompleteProps;
 
 const useStyles = makeStyles((theme) => ({
-  ItemCard: {
+  itemCard: {
     width: '150px',
     height: '150px',
     padding: '10px',
@@ -28,10 +29,14 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-evenly',
     textAlign: 'center',
   },
-  ItemPicture: {
+  itemPicture: {
     width: '100px',
     height: '100px',
     alignSelf: 'center',
+  },
+  icon: {
+    width: '100%',
+    height: '100%',
   },
 }));
 
@@ -41,7 +46,7 @@ const WorkerItem: React.FC<IProps> = (props: IProps) => {
 
   return (
     <Card
-      className={classes.ItemCard}
+      className={classes.itemCard}
       raised={props.placeholder ? false : props.isDragging}
     >
       {props.placeholder ? (
@@ -51,15 +56,31 @@ const WorkerItem: React.FC<IProps> = (props: IProps) => {
             const {
               itemType,
             } = props;
-            const { description, pic } = types[itemType];
+            const {
+              description,
+              pictureId,
+            } = types[itemType];
+
+            let pic;
+            switch (pictureId) {
+              case 'hammer': {
+                pic = (
+                  <Gavel className={classes.icon} />
+                );
+                break;
+              }
+            }
+            if (pic === undefined) {
+              throw new Error('Unknown picture ID provided for WorkerItem');
+            }
 
             return (
               <React.Fragment>
                 <div
                   key='workeritem-picture'
-                  className={classes.ItemPicture}
+                  className={classes.itemPicture}
                 >
-                  {pic()}
+                  {pic}
                 </div>
                 <CardHeader
                   key='workeritem-description'

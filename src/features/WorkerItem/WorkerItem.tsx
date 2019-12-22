@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import BuildIcon from '@material-ui/icons/Build';
 import Gavel from '@material-ui/icons/Gavel';
 
 import { CookieParser } from 'services/cookie';
@@ -66,6 +67,12 @@ const WorkerItem: React.FC<IProps> = (props: IProps) => {
               case 'hammer': {
                 pic = (
                   <Gavel className={classes.icon} />
+                );
+                break;
+              }
+              case 'wrench': {
+                pic = (
+                  <BuildIcon className={classes.icon} />
                 );
                 break;
               }

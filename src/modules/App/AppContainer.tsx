@@ -42,10 +42,10 @@ export default class AppContainer extends React.PureComponent<IProps, IState> {
     throw new Error('No resolution for given role exists!');
   };
 
-  private logOut: () => void = () => {
-    this.state.api.logOut();
+  private logOut: () => Promise<void> = async () => {
+    await this.state.api.logOut();
     // TODO: more elegant way to force component update?
-    window.location.reload(false);
+    window.location.replace('/');
   };
 
   render(): React.ReactNode {

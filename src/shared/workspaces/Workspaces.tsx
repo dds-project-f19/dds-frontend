@@ -3,7 +3,7 @@ type TypeId = Id;
 type SlotId = Id;
 type WorkspaceId = Id;
 
-type ItemPictureId = 'hammer';
+type ItemPictureId = 'hammer' | 'wrench';
 
 interface ISlotInfo {
   allowedTypes: TypeId[];
@@ -33,14 +33,14 @@ const workspaces: IWorkspaceDescription = {
   garage: {
     slots: {
       '0': {
-        allowedTypes: ['0'],
+        allowedTypes: ['0', '1'],
         translation: {
           x: '531px',
           y: '314px',
         },
       },
       '1': {
-        allowedTypes: ['0'],
+        allowedTypes: ['0', '1'],
         translation: {
           x: '411px',
           y: '724px',
@@ -51,6 +51,10 @@ const workspaces: IWorkspaceDescription = {
       '0': {
         description: 'Hammer',
         pictureId: 'hammer',
+      },
+      '1': {
+        description: 'Wrench',
+        pictureId: 'wrench',
       },
     },
   },
